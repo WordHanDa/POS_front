@@ -236,3 +236,95 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+.button-group-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.confirm-hint {
+    color: #ff4757;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.back-btn {
+    background: transparent;
+    border: 1px solid #555;
+    color: #888;
+    padding: 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    color: #fff;
+    border-color: #fff;
+}
+
+.final-confirm {
+    background: #b2966b !important;
+    animation: pulse 1.5s infinite; /* 增加一個微微跳動的效果引導點擊 */
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(178, 150, 107, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(178, 150, 107, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(178, 150, 107, 0); }
+}
+
+/* 確認模式下讓清單縮小一點，留位置給提示文字 */
+.confirm-mode .cart-items {
+    max-height: 40vh;
+}
+
+.cart-item-li {
+    display: flex;
+    flex-direction: column; /* 讓備註排在品項下面 */
+    padding: 15px 0;
+    border-bottom: 1px solid #333;
+}
+
+.item-main-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-note-row {
+    margin-top: 8px;
+}
+
+.item-note-row input {
+    width: 100%;
+    background: #222;
+    border: 1px solid #444;
+    color: #ccc;
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    outline: none;
+    transition: border 0.3s;
+}
+
+.item-note-row input:focus {
+    border-color: #b2966b;
+}
+
+/* 確認視窗中的備註字體樣式 */
+.confirm-note {
+    display: block;
+    font-size: 0.8rem;
+    color: #b2966b;
+    margin-left: 5px;
+}
+
+.confirm-item-detail {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
