@@ -1,0 +1,396 @@
+:root {
+    --gold: #b2966b;
+    --gold-dark: #8b7355;
+    --black: #000000;
+    --dark-gray: #201b18;
+    --light-gray: rgba(192, 192, 192, 0.85);
+    --light-white: rgba(255, 255, 255, 0.9);
+    --dark-white: rgba(255, 255, 255, 0.7);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
+    background-color: var(--black);
+    color: var(--gold);
+    text-align: center;
+    min-height: 100vh;
+    /* 移除 display: flex 和 justify-content: center */
+    overflow-x: hidden; /* 避免 vw 產生的水平捲軸 */
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    background: linear-gradient(145deg, rgba(12, 11, 10, 0.8), rgba(32, 27, 24, 0.8)), url('./bg.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: -1; 
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+}
+
+.logo {
+    margin-bottom: 30px;
+}
+
+.logo img {
+    max-width: 120px;
+    height: auto;
+}
+
+h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, #f9ef91, #9d9653, var(--gold-dark));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+h2 {
+    font-size: 1.8rem;
+    color: var(--light-white);
+    margin-bottom: 50px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    font-style: Noto Serif JP;
+}
+
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    margin: 50px 0;
+}
+
+.menu-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+.menu-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.5s ease;
+}
+
+.menu-icon {
+    width: 150px;
+    height: 150px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    transition: all 0.5s ease;
+}
+
+.menu-icon i {
+    font-size: 3rem;
+    color: var(--gold);
+    transition: all 0.5s ease;
+}
+
+.menu-label {
+    font-size: 1.6rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    transition: all 0.5s ease;
+}
+
+.menu-button:hover .menu-icon {
+    background-color: var(--gold);
+    transform: translateY(-10px);
+}
+
+.menu-button:hover .menu-icon i {
+    color: var(--black);
+}
+
+.menu-button:hover .menu-label {
+    color: var(--gold-dark);
+}
+
+.description {
+    font-size: 1.3rem;
+    color: var(--light-gray);
+    margin: 40px auto;
+    max-width: 700px;
+    line-height: 1.8;
+    letter-spacing: 0.1em;
+}
+
+.story {
+    font-size: 1.2rem;
+    color: var(--light-gray);
+    margin: 20px auto;
+    max-width: 800px;
+    line-height: 1.8;
+    letter-spacing: 0.1em;
+    word-wrap: keep-all;
+}
+
+.warming {
+    font-size: 0.9rem;
+    color: var(--dark-white);
+    margin: 20px auto;
+    max-width: 600px;
+    line-height: 1.6;
+    letter-spacing: 0.1em;
+}
+
+.separator {
+    width: 150px;
+    height: 1px;
+    background-color: var(--light-gray);
+    margin: 50px auto;
+    position: relative;
+}
+
+.separator::before {
+    content: "✦";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    padding: 0 20px;
+    color: var(--gold);
+}
+
+.social-links {
+    margin: 40px 0;
+    text-decoration: none;
+}
+
+.social-links a {
+    color: var(--gold);
+    font-size: 1.8rem;
+    margin: 0 15px;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+}
+
+.social-links a:hover {
+    color: var(--gold-dark);
+    transform: translateY(-5px);
+}
+
+.footer {
+    background-color: var(--black);
+    padding: 20px;
+    margin-top: auto;
+    font-size: 1rem;
+    color: var(--light-gray);
+    letter-spacing: 0.1em;
+    width: 100%;
+    z-index: 1;
+}
+
+.footer a {
+    color: var(--gold);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    ;
+}
+
+.footer a:hover {
+    color: var(--gold-dark);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Improved Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        padding: 50px 20px;
+    }
+
+    .menu-icon {
+        width: 130px;
+        height: 130px;
+    }
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    .menu-buttons {
+        flex-direction: column;
+        gap: 50px;
+    }
+
+    .menu-icon {
+        width: 120px;
+        height: 120px;
+    }
+
+    .container {
+        padding: 40px 20px;
+    }
+
+    .description {
+        font-size: 1.1rem;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+        letter-spacing: 0.15em;
+    }
+
+    h2 {
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+    }
+
+    .menu-icon {
+        width: 100px;
+        height: 100px;
+    }
+
+    .menu-icon i {
+        font-size: 2.5rem;
+    }
+
+    .menu-label {
+        font-size: 1.3rem;
+    }
+
+    .separator {
+        width: 100px;
+    }
+
+    .description {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .social-links a {
+        font-size: 1.5rem;
+        margin: 0 10px;
+    }
+}
+
+/* Fix for extremely small screens */
+@media (max-width: 320px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .container {
+        padding: 30px 15px;
+    }
+
+    .menu-icon {
+        width: 90px;
+        height: 90px;
+    }
+}
+
+/* Add these new styles */
+.header-content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1; /* 低於 scrolling-content */
+    pointer-events: none; /* 讓點擊可以穿透到下層的按鈕 */
+}
+
+.scrolling-content {
+    position: relative;
+    z-index: 2;
+    /* 核心修正：確保背景色 100% 寬度 */
+    width: 100vw; 
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    
+    background-color: #0c0b0a; /* 務必使用實色 */
+    background: linear-gradient(180deg, #0c0b0a 0%, var(--dark-gray) 100%);
+    
+    margin-top: 100vh;
+    margin-bottom: -5cm;
+    margin-top: calc(var(--vh, 1vh) * 100);
+    padding-top: 60px;
+}
+
+.menu-icon i, .social-links i {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+  font-weight: 900;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+.menu-sublabel {
+    font-size: 0.8rem;
+    color: var(--gold-dark);
+    margin-top: 5px;
+}
+
+.header-sublabel {
+    font-size: 1.2rem;
+    color: var(--light-white);
+    margin-bottom: 10px;
+    letter-spacing: 0.1em;
+}
+
+.story-small {
+    font-size: small;
+}
+
+.social-links a {
+    text-decoration: none;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: var(--gold);
+}

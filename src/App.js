@@ -1,38 +1,31 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Classic from './Classic';
-import './App.css';
-import './menu.css';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-function Home() {
-  const spirits = [
-    { zh: '經典調酒', en: 'CLASSIC', link: '/classic' },
-    { zh: '琴酒', en: 'GIN', link: '/gin' },
-    { zh: '威士忌', en: 'WHISKEY', link: '/whiskey' },
-    // ...
-  ];
-
-  return (
-    <div className="spirit-page">
-      <h1>單杯品飲 / Spirits</h1>
-      <div className="button-container">
-        {spirits.map((spirit, index) => (
-          <Link key={index} to={spirit.link} className="spirit-button">
-            <span className="zh">{spirit.zh}</span>
-            <span className="en">{spirit.en}</span>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
+// 匯入各個頁面元件
+import Home from './components/Home';
+import BaseMenu from './components/BaseMenu';
+import Classic from './components/Classic';
+import Special from './components/Special';
+import SpiritDetail from './components/SpiritDetail';
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* 入口首頁 (index.html 內容) */}
         <Route path="/" element={<Home />} />
+        
+        {/* 經典調酒頁 (classic.html 內容) */}
         <Route path="/classic" element={<Classic />} />
-        {/* 其他頁面路由 */}
+        
+        {/* 特調頁 (spical.html 內容) */}
+        <Route path="/special" element={<Special />} />
+        
+        {/* 基酒選單頁 (base.html 內容) */}
+        <Route path="/spirits" element={<BaseMenu />} />
+        
+        {/* 基酒詳細列表 (如 /spirits/gin, /spirits/whiskey) */}
+        <Route path="/spirits/:type" element={<SpiritDetail />} />
       </Routes>
     </Router>
   );
