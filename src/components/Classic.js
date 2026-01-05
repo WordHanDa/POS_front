@@ -1,8 +1,6 @@
-// Classic.js
-import React from 'react';
 import './Classic.css'; // 將原本 classic.html 的 CSS 放入此檔
 
-function Classic() {
+function Classic(BASE_API) {
   const cocktails = [
     { name: "Martini 馬丁尼", price: "250", desc: "Gin, Dry Vermouth, Olive", zh: "琴酒、辛辣苦艾酒、橄欖" },
     { name: "Negroni 內格羅尼", price: "300", desc: "Gin, Campari, Sweet Vermouth", zh: "琴酒、金巴利、甜苦艾酒" },

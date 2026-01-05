@@ -8,6 +8,8 @@ import Classic from './components/Classic';
 import Special from './components/Special';
 import SpiritDetail from './components/SpiritDetail';
 
+const BASE_API = 'https://api.example.com';
+
 function App() {
   return (
     <Router>
@@ -16,16 +18,16 @@ function App() {
         <Route path="/" element={<Home />} />
         
         {/* 經典調酒頁 (classic.html 內容) */}
-        <Route path="/classic" element={<Classic />} />
+        <Route path="/classic" element={<Classic BASE_API={BASE_API} />} />
         
         {/* 特調頁 (spical.html 內容) */}
-        <Route path="/special" element={<Special />} />
+        <Route path="/special" element={<Special BASE_API={BASE_API} />} />
         
         {/* 基酒選單頁 (base.html 內容) */}
-        <Route path="/spirits" element={<BaseMenu />} />
+        <Route path="/spirits" element={<BaseMenu BASE_API={BASE_API} />} />
         
         {/* 基酒詳細列表 (如 /spirits/gin, /spirits/whiskey) */}
-        <Route path="/spirits/:type" element={<SpiritDetail />} />
+        <Route path="/spirits/:type" element={<SpiritDetail BASE_API={BASE_API} />} />
       </Routes>
     </Router>
   );
