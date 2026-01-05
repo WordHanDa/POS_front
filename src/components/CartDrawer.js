@@ -54,21 +54,20 @@ const CartDrawer = ({ BASE_API }) => {
 
     const totalPrice = cart.reduce((sum, item) => sum + (item.ITEM_PRICE * item.quantity), 0);
 
+    // 在 CartDrawer.js 內部
     const handleFinalSubmit = async () => {
         setIsSubmitting(true);
         try {
-            // 取得桌號，這裡假設你從 Props 或其他地方獲取 SEAT_ID
-            // 如果沒有傳入，暫時預設為 1
-            const seatId = 1; 
+            // 從 Cookie 讀取桌號，若不存在則預設為 "1"
+            const savedSeat = Cookies.get('customer_seat_ID') || '0';
 
             const orderData = {
-                items: cart, 
-                // 這裡的 note 會傳送整體訂單備註，品項備註則在 items 陣列中
-                note: "手機點餐" 
+                items: cart, // 每個 item 包含 ITEM_ID, quantity, ITEM_PRICE, note
+                note: "手機自助點餐"
             };
 
-            // 修改處：將 SEAT_ID 放在 URL 參數中
-            const response = await fetch(`${BASE_API}/PLACE_ORDER?SEAT_ID=${seatId}`, {
+            // 將 SEAT_ID 作為 Query Parameter 傳送
+            const response = await fetch(`${BASE_API}/PLACE_ORDER?SEAT_ID=${savedSeat}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData),
@@ -81,11 +80,12 @@ const CartDrawer = ({ BASE_API }) => {
                 setIsConfirming(false);
                 setTimeout(() => setIsOrderSuccess(true), 400);
             } else {
-                alert("訂單送出失敗");
+                const errData = await response.json();
+                alert(`訂單送出失敗: ${errData.error || '未知錯誤'}`);
             }
         } catch (error) {
             console.error("Checkout Error:", error);
-            alert("網路錯誤");
+            alert("網路連線異常，請聯繫服務人員");
         } finally {
             setIsSubmitting(false);
         }
@@ -103,8 +103,11 @@ const CartDrawer = ({ BASE_API }) => {
             <div className={`cart-overlay ${isOpen ? 'active' : ''}`} onClick={() => setIsOpen(false)}>
                 <div className={`cart-panel ${isOpen ? 'open' : ''}`} onClick={(e) => e.stopPropagation()}>
                     <button className="close-btn" onClick={() => setIsOpen(false)}>×</button>
+                    <div className="seat-display">
+                        SEAT: {Cookies.get('customer_seat_name') || '未設定'}
+                    </div>
                     <h2 className="text-gradient">YOUR ORDER</h2>
-                    
+
                     {cart.length === 0 ? (
                         <div className="empty-cart-container"><p className="empty-msg">購物車目前是空的</p></div>
                     ) : (
@@ -125,10 +128,10 @@ const CartDrawer = ({ BASE_API }) => {
                                         </div>
                                         {/* 新增：個別品項備註輸入框 */}
                                         <div className="item-note-row">
-                                            <input 
-                                                type="text" 
-                                                placeholder="備註 (如：少冰、少糖...)" 
-                                                value={item.note || ''} 
+                                            <input
+                                                type="text"
+                                                placeholder="備註 (如：少冰、少糖...)"
+                                                value={item.note || ''}
                                                 onChange={(e) => updateNote(item.ITEM_ID, e.target.value)}
                                             />
                                         </div>
