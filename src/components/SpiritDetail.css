@@ -1,0 +1,286 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
+    background: linear-gradient(135deg, #f5f1e8 0%, #ebe5d8 100%);
+    padding: 40px 20px;
+    color: #3d3021;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #fdfcf8;
+    padding: 60px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+}
+
+h1 {
+    font-size: 56px;
+    color: #8b6f47;
+    margin-bottom: 20px;
+    letter-spacing: 8px;
+    border-bottom: 2px solid #8b6f47;
+    padding-bottom: 20px;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+    margin-top: 50px;
+}
+
+.item {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    /* Changed from flex-start to center */
+}
+
+.item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.item-image {
+    flex-shrink: 0;
+    width: 150px;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 8px;
+    display: flex;
+    /* Added */
+    align-self: center;
+    /* Added */
+}
+
+.item-content {
+    flex: 1;
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between; /* 確保內容撐開 */
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #e8dcc8;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+.item-name {
+    font-size: 32px;
+    color: #8b6f47;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+.price-box {
+    text-align: right;
+}
+
+.abv {
+    display: inline-block;
+    background: #8b6f47;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.price {
+    font-size: 18px;
+    color: #8b6f47;
+    font-weight: 600;
+    line-height: 1.6;
+}
+
+.description {
+    font-size: 16px;
+    line-height: 1.9;
+    color: #5a4a3a;
+    text-align: justify;
+}
+
+@media (max-width: 1024px) {
+    .menu-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .container {
+        padding: 40px 30px;
+    }
+
+    h1 {
+        font-size: 42px;
+    }
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 36px;
+        letter-spacing: 4px;
+    }
+
+    .item-name {
+        font-size: 24px;
+    }
+
+    .item-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .item {
+        flex-direction: column;
+    }
+
+    .item-image {
+        width: 120px;
+        height: 160px;
+        align-self: center;
+    }
+
+    .price-box {
+        text-align: left;
+        margin-top: 10px;
+    }
+}
+
+/* 讓按鈕在卡片右側垂直排列 */
+.price-box-grouped {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 130px;
+}
+
+/* 價格按鈕樣式：細線框金屬感 */
+.variant-price-btn {
+    background: #ffffff;
+    border: 1px solid #8b6f47;
+    color: #8b6f47;
+    padding: 6px 12px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.variant-price-btn:hover {
+    background: #8b6f47;
+    color: #fff;
+    transform: scale(1.03);
+}
+
+.v-size {
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.v-price {
+    font-weight: 700;
+}
+
+.name-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1; /* 讓酒名區佔據剩餘空間 */
+}
+
+.abv-tag {
+    margin-left: auto; /* 關鍵：推向最右側 */
+    border: 1px solid #8b6f47;
+    color: #8b6f47;
+    background: rgba(139, 111, 71, 0.05);
+    font-size: 11px;
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.price-box-grouped {
+    display: flex;
+    flex-direction: row; /* 改為橫向排列 */
+    gap: 12px;
+    margin-top: 20px; /* 與上方描述拉開距離 */
+    padding-top: 15px;
+    border-top: 1px dashed #e8dcc8; /* 加入裝飾虛線 */
+    width: 100%;
+}
+.variant-price-btn {
+    min-width: 100px; /* 固定最小寬度，看起來更整齊 */
+    background: #8b6f47;
+    color: #ffffff;
+    padding: 8px 15px;
+    border-radius: 4px;
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: larger;
+}
+
+/* 行動裝置適配：若名稱太長則換行 */
+@media (max-width: 480px) {
+    .item-header {
+        flex-direction: row; /* 保持酒名與 ABV 在同一排 */
+        justify-content: space-between;
+    }
+    
+    .price-box-grouped {
+        justify-content: center; /* 手機版按鈕置中 */
+        flex-wrap: wrap; /* 空間不足自動換行 */
+    }
+}
+.section-title {
+    font-size: 56px;
+    color: #8b6f47;
+    margin-bottom: 40px;
+    letter-spacing: 0.2em; /* 增加字距 */
+    text-align: center;
+    font-weight: 300; /* 使用細體字體顯得更高級 */
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 20px;
+    border-bottom: none; /* 移除原本的底部實線 */
+}
+.section-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: #8b6f47;
+    margin: 20px auto 0;
+}
+
+/* 返回連結的樣式優化 */
+.back-link-custom {
+    color: #8b6f47;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: opacity 0.3s;
+}
+
+.back-link-custom:hover {
+    opacity: 0.7;
+}

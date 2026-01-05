@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import MenuSection from './MenuSection'; // 確保路徑正確
-import './menu.css'; // 延用你的樣式
+import MenuSection from './MenuSection';
+import './specialmenu.css';
 
 function Special({ BASE_API }) {
   
