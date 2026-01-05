@@ -147,3 +147,22 @@ body {
         font-size: 20px;
     }
 }
+
+.current-seat-tag {
+    color: #b2966b;
+    border: 1px solid #b2966b;
+    padding: 4px 12px;
+    display: inline-block;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin: 10px 0 20px 0;
+    background: rgba(178, 150, 107, 0.1);
+}
+
+/* 確保特調描述中文字體美觀 */
+.item-description-zh {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 4px;
+    letter-spacing: 1px;
+}

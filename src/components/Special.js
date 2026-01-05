@@ -1,29 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './menu.css'; // 使用你 components 內的 menu.css
+import Cookies from 'js-cookie';
+import MenuSection from './MenuSection'; // 確保路徑正確
+import './menu.css'; // 延用你的樣式
 
-function Special() {
-  const specialDrinks = [
-    { name: "The " + "G" + "arden", price: "350", desc: "Gin, Elderflower, Cucumber", zh: "琴酒、接骨木花、小黃瓜" },
-    { name: "Island Oasis", price: "380", desc: "Rum, Pineapple, Coconut", zh: "蘭姆酒、鳳梨、椰子" }
-    // 請根據 spical.html 內容補齊其他品項
-  ];
+function Special({ BASE_API }) {
+  
+  // 進入頁面時，再次確認桌號（預防直接從網址進入此頁）
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const seatId = params.get('SEAT_ID');
+    if (seatId) {
+      Cookies.set('customer_seat_id', seatId, { expires: 1, path: '/' });
+      // 串接 API 取得桌號名稱 (T1, T2...)
+      fetch(`${BASE_API}/SEAT`)
+        .then(res => res.json())
+        .then(data => {
+          const target = data.find(s => String(s.SEAT_ID) === String(seatId));
+          if (target) Cookies.set('customer_seat_name', target.SEAT_NAME, { expires: 1, path: '/' });
+        });
+    }
+  }, [BASE_API]);
 
   return (
-    <div className="menu-container dark-theme">
-      <Link to="/" className="back-link">← Back</Link>
-      <div className="section-title text-gradient">SPECIAL SELECTION</div>
-      <div className="menu-grid">
-        {specialDrinks.map((drink, index) => (
-          <div className="menu-item" key={index}>
-            <div className="item-header">
-              <span className="item-name">{drink.name}</span>
-              <span className="item-price">{drink.price}</span>
-            </div>
-            <div className="item-description">{drink.desc}</div>
-            <div className="item-description-zh">{drink.zh}</div>
-          </div>
-        ))}
+    <div className="classic-page"> {/* 使用與 Classic 一致的外層 class 確保樣式統一 */}
+      <div className="menu-container dark-theme">
+        <Link to="/" className="back-link" style={{ color: '#b2966b', textDecoration: 'none' }}>
+          ← BACK
+        </Link>
+
+        {/* 調用 MenuSection 自動處理 AJAX 請求與滾動偵測 */}
+        <MenuSection 
+          type="SIGNATURE" 
+          title="SIGNATURE 特調系列" 
+          BASE_API={BASE_API} 
+        />
+
+        {/* 如果特調還有分不同子類別，可以繼續疊加 MenuSection */}
+        {/* <MenuSection 
+          type="SEASONAL" 
+          title="SEASONAL 限定" 
+          BASE_API={BASE_API} 
+        /> 
+        */}
       </div>
     </div>
   );
