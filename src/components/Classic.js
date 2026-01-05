@@ -1,28 +1,50 @@
-import './Classic.css'; // 將原本 classic.html 的 CSS 放入此檔
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import './Classic.css';
 
-function Classic(BASE_API) {
-  const cocktails = [
-    { name: "Martini 馬丁尼", price: "250", desc: "Gin, Dry Vermouth, Olive", zh: "琴酒、辛辣苦艾酒、橄欖" },
-    { name: "Negroni 內格羅尼", price: "300", desc: "Gin, Campari, Sweet Vermouth", zh: "琴酒、金巴利、甜苦艾酒" },
-    // ...以此類推
-  ];
+function Classic({ BASE_API }) {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // 串接您的 API 位址
+    fetch(`${BASE_API}/ITEM_BY_TYPE?type=aaa`)
+      .then(response => response.json())
+      .then(data => {
+        setItems(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <div className="menu-container" style={{color: '#fff'}}>Loading...</div>;
+  }
 
   return (
-    <div className="menu-container">
-      <div className="section-title text-gradient">CLASSIC COCKTAILS</div>
-      <div className="menu-grid">
-        {cocktails.map((item, index) => (
-          <div className="menu-item" key={index}>
-            <div className="item-header">
-              <span className="item-name">{item.name}</span>
-              <span className="item-price">{item.price}</span>
+    <div className="classic-page">
+      <div className="menu-container">
+        <Link to="/" className="back-link" style={{ color: '#b2966b', textDecoration: 'none' }}>← BACK</Link>
+        
+        <div className="section-title text-gradient">MENU SELECTION</div>
+        
+        <div className="menu-grid">
+          {items.map((item) => (
+            <div className="menu-item" key={item.ITEM_ID}>
+              <div className="item-header">
+                {/* 使用 API 返回的 ITEM_NAME 與 ITEM_PRICE */}
+                <span className="item-name">{item.ITEM_NAME}</span>
+                <span className="item-price">{item.ITEM_PRICE}</span>
+              </div>
+              {/* 使用 API 返回的 Description */}
+              <div className="item-description">{item.Description}</div>
             </div>
-            <div className="item-description">{item.desc}</div>
-            <div className="item-description-zh">{item.zh}</div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-      {/* 這裡可以依照您的 classic.html 內容繼續加入 Food section */}
     </div>
   );
 }

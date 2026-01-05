@@ -8,7 +8,7 @@ import Classic from './components/Classic';
 import Special from './components/Special';
 import SpiritDetail from './components/SpiritDetail';
 
-const BASE_API = 'https://api.example.com';
+const BASE_API = 'https://posserver-sigma.vercel.app/';
 
 function App() {
   return (
