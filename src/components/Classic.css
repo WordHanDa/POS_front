@@ -158,3 +158,26 @@ body {
         font-size: 20px;
     }
 }
+.menu-item {
+  transition: transform 0.2s, background-color 0.2s;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.menu-item:hover {
+  background-color: rgba(178, 150, 107, 0.1); /* 淡淡的金黃色背景 */
+  transform: scale(1.02);
+}
+
+.add-hint {
+  font-size: 0.7rem;
+  color: #b2966b;
+  text-align: right;
+  margin-top: 5px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.menu-item:hover .add-hint {
+  opacity: 1;
+}

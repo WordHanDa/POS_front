@@ -1,88 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import MenuSection from './MenuSection'; // 引入新建立的子組件
 import './Classic.css';
 
 function Classic({ BASE_API }) {
-  const [sparklingItems, setSparklingItems] = useState([]);
-  const [shotItems, setShotItems] = useState([]);
-  const [gatheringDrinksItems, setGatheringDrinksItems] = useState([]);
-  const [tastingMenuItems, setTastingMenuItems] = useState([]);
-  const [classicItems, setClassicItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-
-    Promise.all([
-      fetch(`${BASE_API}/ITEM_BY_TYPE?type=SPARKLING`).then(res => res.json()),
-      fetch(`${BASE_API}/ITEM_BY_TYPE?type=SHOTS`).then(res => res.json()),
-      fetch(`${BASE_API}/ITEM_BY_TYPE?type=GATHERING_DRINKS`).then(res => res.json()),
-      fetch(`${BASE_API}/ITEM_BY_TYPE?type=TASTING_MENU`).then(res => res.json()),
-      fetch(`${BASE_API}/ITEM_BY_TYPE?type=CLASSIC`).then(res => res.json())
-    ])
-      .then(([sparkling, shot, gathering, tasting, classic]) => {
-        setSparklingItems(sparkling);
-        setShotItems(shot);
-        setGatheringDrinksItems(gathering); // 修正：賦值給 state
-        setTastingMenuItems(tasting);       // 修正：賦值給 state
-        setClassicItems(classic);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Fetch error:', error);
-        setLoading(false);
-      });
-  }, [BASE_API]);
-
-  if (loading) return <div className="menu-container" style={{ color: '#fff' }}>Loading...</div>;
+  // 定義所有類別
+  const sections = [
+    { type: 'SPARKLING', title: 'SPARKLING 氣泡' },
+    { type: 'CLASSIC', title: 'CLASSIC 經典' },
+    { type: 'SHOTS', title: 'SHOTS 一口酒' },
+    { type: 'GATHERING_DRINKS', title: 'GATHERING DRINKS 聚會酒' },
+    { type: 'TASTING_MENU', title: 'TASTING MENU 品嘗菜單' }
+  ];
 
   return (
     <div className="classic-page">
       <div className="menu-container">
         <Link to="/" className="back-link" style={{ color: '#b2966b', textDecoration: 'none' }}>← BACK</Link>
 
-        {/* SPARKLING */}
-        <div className="section-title text-gradient">SPARKLING 氣泡</div>
-        <div className="menu-grid">
-          {sparklingItems.map((item) => <MenuItem key={item.ITEM_ID} item={item} />)}
-        </div>
-
-        {/* CLASSIC */}
-        <div className="section-title text-gradient">CLASSIC 經典</div>
-        <div className="menu-grid">
-          {classicItems.map((item) => <MenuItem key={item.ITEM_ID} item={item} />)}
-        </div>
-
-        {/* SHOTS */}
-        <div className="section-title text-gradient">SHOTS 一口酒</div>
-        <div className="menu-grid">
-          {shotItems.map((item) => <MenuItem key={item.ITEM_ID} item={item} />)}
-        </div>
-
-        {/* GATHERING DRINKS */}
-        <div className="section-title text-gradient">GATHERING DRINKS 聚會酒</div>
-        <div className="menu-grid">
-          {gatheringDrinksItems.map((item) => <MenuItem key={item.ITEM_ID} item={item} />)}
-        </div>
-
-        {/* TASTING MENU */}
-        <div className="section-title text-gradient">TASTING MENU 品嘗菜單</div>
-        <div className="menu-grid">
-          {tastingMenuItems.map((item) => <MenuItem key={item.ITEM_ID} item={item} />)}
-        </div>
+        {sections.map((section) => (
+          <MenuSection 
+            key={section.type} 
+            type={section.type} 
+            title={section.title} 
+            BASE_API={BASE_API} 
+          />
+        ))}
       </div>
-    </div>
-  );
-}
-
-function MenuItem({ item }) {
-  return (
-    <div className="menu-item">
-      <div className="item-header">
-        <span className="item-name">{item.ITEM_NAME}</span>
-        <span className="item-price">{item.ITEM_PRICE}</span>
-      </div>
-      <div className="item-description">{item.Description}</div>
     </div>
   );
 }
