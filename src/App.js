@@ -17,7 +17,7 @@ function App() {
   return (
     <Router>
       {/* 1. 放在這裡：無論頁面如何切換，購物車按鈕都會固定在右下角 */}
-      <CartDrawer />
+      <CartDrawer BASE_API={BASE_API}/>
 
       <Routes>
         {/* 入口首頁 */}

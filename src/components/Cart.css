@@ -134,11 +134,103 @@
 }
 
 .qty-control button {
-  background: #b2966b;
+  background: #ffffff00;
   border: none;
-  color: #ffffff;
+  color: #b2966b;
   padding: 5px 10px;
   cursor: pointer;
   font-weight: bold;
   transition: background 0.3s;
+  font-size: 20px;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #b2966b;
+  text-align: left;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+  border-top: 1px solid #222;
+  padding-top: 15px;
+  margin-top: 15px;
+  margin-bottom: 10%;
+}
+
+.cart-footer {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-top: auto;
+}
+
+/* 成功彈窗遮罩 */
+.order-success-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  animation: fadeIn 0.4s ease;
+}
+
+/* 成功彈窗主體 */
+.order-success-modal {
+  background: #1a1a1a;
+  border: 1px solid #b2966b;
+  padding: 40px;
+  text-align: center;
+  border-radius: 10px;
+  max-width: 90%;
+  width: 320px;
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  background: #b2966b;
+  color: #000;
+  font-size: 30px;
+  line-height: 60px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+}
+
+.order-success-modal h2 {
+  color: #b2966b;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
+
+.order-success-modal p {
+  color: #ccc;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+.order-success-modal button {
+  background: transparent;
+  border: 1px solid #b2966b;
+  color: #b2966b;
+  padding: 10px 30px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.order-success-modal button:hover {
+  background: #b2966b;
+  color: #000;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
