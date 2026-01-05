@@ -7,6 +7,7 @@ function Classic({ BASE_API }) {
   const [shotItems, setShotItems] = useState([]);
   const [gatheringDrinksItems, setGatheringDrinksItems] = useState([]);
   const [tastingMenuItems, setTastingMenuItems] = useState([]);
+  const [classicItems, setClassicItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,15 +15,17 @@ function Classic({ BASE_API }) {
 
     Promise.all([
       fetch(`${BASE_API}/ITEM_BY_TYPE?type=SPARKLING`).then(res => res.json()),
-      fetch(`${BASE_API}/ITEM_BY_TYPE?type=SHOT`).then(res => res.json()),
+      fetch(`${BASE_API}/ITEM_BY_TYPE?type=SHOTS`).then(res => res.json()),
       fetch(`${BASE_API}/ITEM_BY_TYPE?type=GATHERING_DRINKS`).then(res => res.json()),
-      fetch(`${BASE_API}/ITEM_BY_TYPE?type=TASTING_MENU`).then(res => res.json())
+      fetch(`${BASE_API}/ITEM_BY_TYPE?type=TASTING_MENU`).then(res => res.json()),
+      fetch(`${BASE_API}/ITEM_BY_TYPE?type=CLASSIC`).then(res => res.json())
     ])
-      .then(([sparkling, shot, gathering, tasting]) => {
+      .then(([sparkling, shot, gathering, tasting, classic]) => {
         setSparklingItems(sparkling);
         setShotItems(shot);
         setGatheringDrinksItems(gathering); // 修正：賦值給 state
         setTastingMenuItems(tasting);       // 修正：賦值給 state
+        setClassicItems(classic);
         setLoading(false);
       })
       .catch(error => {
@@ -42,6 +45,12 @@ function Classic({ BASE_API }) {
         <div className="section-title text-gradient">SPARKLING 氣泡</div>
         <div className="menu-grid">
           {sparklingItems.map((item) => <MenuItem key={item.ITEM_ID} item={item} />)}
+        </div>
+
+        {/* CLASSIC */}
+        <div className="section-title text-gradient">CLASSIC 經典</div>
+        <div className="menu-grid">
+          {classicItems.map((item) => <MenuItem key={item.ITEM_ID} item={item} />)}
         </div>
 
         {/* SHOTS */}
