@@ -1,70 +1,94 @@
-# Getting Started with Create React App
+這是一份為您的酒吧 POS 點單系統量身打造的 **README.md** 與 **使用手冊 (User Manual)**。這份文件整合了您之前的技術架構（如命名空間、Context 管理建議）與視覺設計規範。
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
-## Available Scripts
+# 📋 Bar POS System - README
 
-In the project directory, you can run:
+## 🌟 專案簡介
 
-### `npm start`
+這是一個為酒吧（以長庚大學飲料調製研究社為範例）開發的高級行動端點單系統。系統採用 React 技術棧，結合黑金與米白交織的視覺風格，提供直觀的調酒、基酒瀏覽與點單體驗。
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🛠 技術棧
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* **前端**: React (Hooks, Context API 建議)
+* **樣式**: CSS3 (命名空間隔離, Flexbox/Grid 佈局)
+* **字體 & 圖示**: Google Fonts (Cormorant Garamond, Noto Serif TC), Font Awesome 6.5.1
+* **狀態管理**: JS-Cookie (用於購物車持久化)
+* **後端對接**: Node.js RESTful API
 
-### `npm test`
+## 📁 檔案結構與命名空間
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+為了避免 CSS 衝突，本專案採用嚴格的命名空間管理：
 
-### `npm run build`
+* `.home-page`: 負責首頁黑金視差效果。
+* `.spirit-detail-page`: 基酒詳情頁（米色調字卡佈局）。
+* `.classic-page` / `.special-page`: 調酒類別清單。
+* `.cart-panel`: 側邊欄購物車與下單邏輯。
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🚀 核心優化功能
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Mobile-First 佈局**: 透過 `vh` 變數修正行動端瀏覽器 URL Bar 對高度的影響。
+2. **Lazy Loading**: `MenuSection` 使用 `IntersectionObserver` 監控進入視野後才載入資料。
+3. **防禦性渲染**: 針對 API 500 錯誤進行 `Array.isArray` 檢查與自動/手動重試機制。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+# 📘 使用手冊 (User Manual)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 1. 顧客操作流程
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Step 1: 進入首頁
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* 掃描桌上 QR Code 後，系統會鎖定桌號（如 T2）。
+* 向上滑動瀏覽酒吧故事，或直接點擊選單按鈕（經典調酒、本週特調、單杯品飲）。
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Step 2: 瀏覽酒單
 
-## Learn More
+* **調酒清單**: 顯示酒名、價格與風味描述。點擊品項即可快速加入購物車。
+* **基酒詳情**: 點擊單杯品飲後，進入精美的字卡頁面。
+* 左側：酒款圖片。
+* 右側：詳細口感描述與 ABV 酒精濃度。
+* 底部：提供 **15ml** 與 **30ml** 兩種份量選擇。
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+### Step 3: 管理購物車
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* 點擊右下角 **金色購物車按鈕** 開啟側欄。
+* **調整數量**: 點擊 `+` 或 `-` 修正杯數。
+* **添加備註**: 在品項下方的輸入框填寫特殊需求（如：去冰、酒濃一點）。
 
-### Analyzing the Bundle Size
+### Step 4: 下單確認
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. 點擊「確認下單」。
+2. 系統會進入 **最終確認模式**，顯示總金額與所有細節。
+3. 點擊「確定送出」，看到成功彈窗後即完成點單。
 
-### Making a Progressive Web App
+## 2. 常見問題排除 (Troubleshooting)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Q1: 畫面出現「發生錯誤，請重新整理」？
 
-### Advanced Configuration
+* **原因**: 伺服器忙碌或資料庫查詢超時 (Status 500)。
+* **解決**: 點擊頁面上的「重試」按鈕，或手動重新整理網頁。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Q2: 圖示顯示為空白方塊？
 
-### Deployment
+* **原因**: 網路環境不穩導致 Font Awesome 資源載入失敗。
+* **解決**: 請確保網路通暢，並檢查是否開啟了擋廣告插件（AdBlocker）誤擋了 CDN 連結。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Q3: 購物車數量沒有更新？
 
-### `npm run build` fails to minify
+* **原因**: 瀏覽器 Cookie 被禁用。
+* **解決**: 請確保瀏覽器允許使用 Cookie，否則無法記錄您的點單內容。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+## 🛠 開發者優化方向 (Next Steps)
+
+1. **導入 Context API**: 取代現有的 Cookie 同步邏輯，提升效能。
+2. **自動重試機制**: 當 API 回傳 500 時，前端自動嘗試 3 次請求。
+3. **Skeleton UI**: 使用骨架屏取代單調的「Loading...」文字，提升質感。
+
+---
+
+**這份文件已經準備好！您可以將 README 內容放入專案根目錄，將使用手冊提供給酒吧的工作人員參考。還需要我為「管理員後台」寫一段說明嗎？**
