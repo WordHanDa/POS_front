@@ -95,7 +95,9 @@ const CartDrawer = ({ BASE_API }) => {
         <>
             {/* 1. 懸浮按鈕 */}
             <div className={`cart-badge ${isBumping ? 'bump' : ''}`} onClick={() => setIsOpen(true)}>
-                <span className="cart-icon">🛒</span>
+                <div className="menu-icon">
+                    <i className="fa-solid fa-cart-shopping"></i>
+                </div>
                 {cart.length > 0 && <span className="count">{cart.length}</span>}
             </div>
 

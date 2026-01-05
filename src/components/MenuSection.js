@@ -5,6 +5,7 @@ const MenuSection = ({ type, title, BASE_API }) => {
   const [items, setItems] = useState([]);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false); // 新增錯誤狀態
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -18,17 +19,29 @@ const MenuSection = ({ type, title, BASE_API }) => {
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
-  }, [hasLoaded]);
+  }, [hasLoaded, type]); // 加入 type 確保類別改變時邏輯正確
 
   const fetchData = async () => {
     setLoading(true);
+    setError(false); // 開始抓取前重置錯誤狀態
     try {
       const res = await fetch(`${BASE_API}/ITEM_BY_TYPE?type=${type}`);
+      
+      // 檢查回應是否成功 (處理 500, 404 等)
+      if (!res.ok) throw new Error('Server Error');
+
       const data = await res.json();
-      setItems(data);
-      setHasLoaded(true);
+      
+      // 確保 data 是陣列才設定，否則報錯
+      if (Array.isArray(data)) {
+        setItems(data);
+        setHasLoaded(true);
+      } else {
+        throw new Error('Data format error');
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Fetch error:", error);
+      setError(true); // 捕捉到任何錯誤就設為 true
     } finally {
       setLoading(false);
     }
@@ -55,19 +68,35 @@ const MenuSection = ({ type, title, BASE_API }) => {
   return (
     <div className="menu-section-wrapper" ref={sectionRef}>
       <div className="section-title text-gradient">{title}</div>
+      
       {loading && <p className="loading-text">Loading...</p>}
-      <div className="menu-grid">
-        {items.map((item) => (
-          <div className="menu-item" key={item.ITEM_ID} onClick={() => addToCart(item)}>
-            <div className="item-header">
-              <span className="item-name">{item.ITEM_NAME}</span>
-              <span className="item-price">${item.ITEM_PRICE}</span>
+
+      {/* 發生錯誤時顯示重新整理字串 */}
+      {error ? (
+        <div style={{ textAlign: 'center', padding: '20px', color: '#b2966b' }}>
+          <p>發生錯誤，請重新整理</p>
+          <button 
+            onClick={() => fetchData()} 
+            style={{ background: 'none', border: '1px solid #b2966b', color: '#b2966b', padding: '5px 10px', cursor: 'pointer', marginTop: '10px' }}
+          >
+            重試
+          </button>
+        </div>
+      ) : (
+        <div className="menu-grid">
+          {/* 加入 Array.isArray 確保不會因 map 而崩潰 */}
+          {Array.isArray(items) && items.map((item) => (
+            <div className="menu-item" key={item.ITEM_ID} onClick={() => addToCart(item)}>
+              <div className="item-header">
+                <span className="item-name">{item.ITEM_NAME}</span>
+                <span className="item-price">${item.ITEM_PRICE}</span>
+              </div>
+              <div className="item-description">{item.Description}</div>
+              <div className="add-hint">+ ADD TO CART</div>
             </div>
-            <div className="item-description">{item.Description}</div>
-            <div className="add-hint">+ ADD TO CART</div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
