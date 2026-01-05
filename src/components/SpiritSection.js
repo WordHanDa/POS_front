@@ -5,14 +5,13 @@ const SpiritSection = ({ type, title, BASE_API }) => {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // 定義抓取資料的函式
+    // 抓取後端分組資料
     const fetchData = async () => {
         if (!type) return;
         setLoading(true);
         try {
             const apiType = type.toUpperCase();
             const apiUrl = `${BASE_API}/ITEM_GROUPED?type=${apiType}`;
-            console.log("Fetching from API:", apiUrl);
 
             const res = await fetch(apiUrl);
             if (!res.ok) throw new Error('Network response was not ok');
@@ -27,11 +26,9 @@ const SpiritSection = ({ type, title, BASE_API }) => {
 
     useEffect(() => {
         fetchData();
-        // 滾動到最上方，優化切換類別時的體驗
         window.scrollTo(0, 0);
     }, [type, BASE_API]);
 
-    // 加入購物車邏輯
     const addToCart = (item) => {
         const existingCart = Cookies.get('shopping_cart');
         let cart = existingCart ? JSON.parse(existingCart) : [];
@@ -49,31 +46,30 @@ const SpiritSection = ({ type, title, BASE_API }) => {
             });
         }
         Cookies.set('shopping_cart', JSON.stringify(cart), { expires: 7, path: '/' });
+        // 可選：加入提示效果
+        console.log(`已加入購物車: ${item.ITEM_NAME}`);
     };
 
     if (loading) return <div style={{ textAlign: 'center', padding: '50px', color: '#8b6f47' }}>Loading {title}...</div>;
 
     return (
         <div className="spirit-section-wrapper">
-
             {items.length === 0 && !loading && (
-                <p style={{ textAlign: 'center', marginTop: '20px' }}>此類別目前沒有品項</p>
+                <p style={{ textAlign: 'center', marginTop: '20px', color: '#8b6f47' }}>此類別目前沒有品項</p>
             )}
 
-            <div className="menu-grid">
+            {/* 使用 CSS 定義的 spirit-grid 網格佈局 */}
+            <div className="spirit-grid">
                 {items.map((group, index) => (
-                    <div className="item" key={index}>
-                        {/* 左側圖片：確保路徑正確 */}
-                        <img
-                            src={group.picture_url?.startsWith('/') ? group.picture_url : `/${group.picture_url}`}
-                            className="item-image"
-                            alt={group.display_name}
-                        />
+                    <div className="spirit-card" key={index}>
 
-                        {/* 右側內容區 */}
+
+
+                        {/* 2. 右側內容區 */}
                         <div className="item-content">
-                            {/* 頂部：酒名與靠右對齊的 ABV */}
-                            <div className="item-header">
+
+                            {/* 內容區頂部：酒名與 ABV 標籤 */}
+                            <div className="card-header">
                                 <div className="name-wrapper">
                                     <span className="item-name">{group.display_name}</span>
                                 </div>
@@ -81,11 +77,19 @@ const SpiritSection = ({ type, title, BASE_API }) => {
                                     <span className="abv-tag">{group.display_abv}% ABV</span>
                                 )}
                             </div>
+                            <div className="divider">
+                                {/* 1. 左側圖片：使用絕對路徑修正 */}
+                                <img
+                                    src={group.picture_url?.startsWith('/') ? group.picture_url : `/${group.picture_url}`}
+                                    className="item-image"
+                                    alt={group.display_name}
+                                    onError={(e) => { e.target.src = 'https://via.placeholder.com/150x220?text=No+Image' }}
+                                />
 
-                            {/* 中間：描述 */}
-                            <p className="description">{group.description}</p>
-
-                            {/* 底部：15ml/30ml 價格按鈕橫向排列 */}
+                                {/* 內容區中間：口感與故事描述 */}
+                                <p className="description">{group.description}</p>
+                            </div>
+                            {/* 內容區底部：15ml/30ml 選擇按鈕 (推至底部) */}
                             <div className="price-box-grouped">
                                 {group.variants.map(v => (
                                     <button

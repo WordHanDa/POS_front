@@ -4,7 +4,6 @@ import './Home.css';
 
 function Home() {
   useEffect(() => {
-    // 處理行動裝置瀏覽器高度 (vh) 問題
     const handleResize = () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -16,7 +15,7 @@ function Home() {
   }, []);
 
   return (
-    <div>
+    <div className="home-page">
       <div className="overlay"></div>
 
       <div className="header-content">

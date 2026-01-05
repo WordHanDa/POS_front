@@ -23,7 +23,7 @@ function Special({ BASE_API }) {
   }, [BASE_API]);
 
   return (
-    <div className="classic-page"> {/* 使用與 Classic 一致的外層 class 確保樣式統一 */}
+    <div className="special-page"> {/* 使用與 Classic 一致的外層 class 確保樣式統一 */}
       <div className="menu-container dark-theme">
         <Link to="/" className="back-link" style={{ color: '#b2966b', textDecoration: 'none' }}>
           ← BACK

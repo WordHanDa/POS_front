@@ -1,10 +1,5 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
+/* 基礎重置與全域樣式建議保留在 body 或全域，但主要佈局加上 spirit-page */
+.spirit-page {
     font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
     background: linear-gradient(135deg, #f5f1e8 0%, #ebe5d8 100%);
     min-height: 100vh;
@@ -15,7 +10,7 @@ body {
     padding: 40px 20px;
 }
 
-h1 {
+.spirit-page .h1 {
     color: #4a3925;
     font-size: 3rem;
     margin-bottom: 40px;
@@ -24,7 +19,7 @@ h1 {
     letter-spacing: 0.05em;
 }
 
-.button-container {
+.spirit-page .button-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 25px;
@@ -33,7 +28,7 @@ h1 {
     padding: 20px;
 }
 
-.spirit-button {
+.spirit-page .spirit-button {
     background: rgba(255, 255, 255, 0.9);
     border: 2px solid transparent;
     padding: 40px 20px;
@@ -51,21 +46,21 @@ h1 {
     min-height: 180px;
 }
 
-.spirit-button .zh {
+.spirit-page .spirit-button .zh {
     font-family: 'Noto Serif TC', serif;
     font-size: 1.8rem;
     font-weight: 600;
     margin-bottom: 8px;
 }
 
-.spirit-button .en {
+.spirit-page .spirit-button .en {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.2rem;
     letter-spacing: 0.1em;
     opacity: 0.8;
 }
 
-.spirit-button:hover {
+.spirit-page .spirit-button:hover {
     transform: translateY(-5px) scale(1.02);
     box-shadow: 0 12px 30px rgba(139, 111, 71, 0.15);
     background: #8b6f47;
@@ -73,24 +68,25 @@ h1 {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
+/* 響應式佈局同樣加上前綴確保權重 */
 @media (max-width: 900px) {
-    .button-container {
+    .spirit-page .button-container {
         grid-template-columns: repeat(2, 1fr);
         max-width: 600px;
     }
 }
 
 @media (max-width: 480px) {
-    .button-container {
+    .spirit-page .button-container {
         grid-template-columns: 1fr;
         max-width: 320px;
     }
 
-    h1 {
+    .spirit-page .h1 {
         font-size: 2.2rem;
     }
 
-    .spirit-button {
+    .spirit-page .spirit-button {
         padding: 30px 20px;
         min-height: 150px;
     }
