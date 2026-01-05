@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import './Cart.css';
 
-const CartDrawer = ({BASE_API}) => {
+const CartDrawer = ({ BASE_API }) => {
     const [cart, setCart] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [isBumping, setIsBumping] = useState(false);
@@ -54,17 +54,15 @@ const CartDrawer = ({BASE_API}) => {
 
     const handleCheckout = async () => {
         if (cart.length === 0) return;
-
         setIsSubmitting(true);
+
         try {
-            // 1. 準備發送給後端的資料格式
             const orderData = {
                 items: cart,
-                totalPrice: cart.reduce((sum, item) => sum + item.ITEM_PRICE * item.quantity, 0),
-                orderTime: new Date().toISOString(),
+                seatId: 1, // 建議之後改為動態桌號
+                note: "手機點餐"
             };
 
-            // 2. 呼叫後端 API (假設路徑為 /PLACE_ORDER)
             const response = await fetch(`${BASE_API}/PLACE_ORDER`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -72,17 +70,22 @@ const CartDrawer = ({BASE_API}) => {
             });
 
             if (response.ok) {
-                // 3. 結帳成功後的處理
-                Cookies.remove('shopping_cart', { path: '/' }); // 移除 Cookie
-                setCart([]);                                   // 清空本地 State
-                setIsOrderSuccess(true);                       // 顯示成功提示
-                setIsOpen(false);                              // 關閉側選單
+                // --- 關鍵順序 ---
+                Cookies.remove('shopping_cart', { path: '/' });
+                setCart([]);
+
+                setIsOpen(false);           // 1. 先把側邊欄收起來
+
+                // 延遲一點點顯示成功視窗，讓側欄收回去的動畫跑完，視覺感更好
+                setTimeout(() => {
+                    setIsOrderSuccess(true);  // 2. 顯示成功視窗
+                }, 400);
+
             } else {
-                alert("結帳失敗，請稍後再試。");
+                alert("訂單送出失敗");
             }
         } catch (error) {
-            console.error("Order Error:", error);
-            alert("網路錯誤，無法送出訂單。");
+            console.error(error);
         } finally {
             setIsSubmitting(false);
         }
@@ -90,58 +93,88 @@ const CartDrawer = ({BASE_API}) => {
 
     return (
         <>
-            <div className={`cart-badge ${isBumping ? 'bump' : ''}`} onClick={() => setIsOpen(true)}>
-                🛒 <span className="count">{cart.length}</span>
+            {/* 1. 懸浮按鈕 - 根據 cart.length 顯示數字並觸發 bump 動畫 */}
+            <div
+                className={`cart-badge ${isBumping ? 'bump' : ''}`}
+                onClick={() => setIsOpen(true)}
+            >
+                <span className="cart-icon">🛒</span>
+                {cart.length > 0 && <span className="count">{cart.length}</span>}
             </div>
 
-            <div className={`cart-overlay ${isOpen ? 'active' : ''}`} onClick={() => setIsOpen(false)}>
-                <div className={`cart-panel ${isOpen ? 'open' : ''}`} onClick={(e) => e.stopPropagation()}>
+            {/* 2. 購物車側欄遮罩層 */}
+            <div
+                className={`cart-overlay ${isOpen ? 'active' : ''}`}
+                onClick={() => setIsOpen(false)}
+            >
+                {/* 3. 購物車面板 - 阻止冒泡避免點擊面板時關閉 */}
+                <div
+                    className={`cart-panel ${isOpen ? 'open' : ''}`}
+                    onClick={(e) => e.stopPropagation()}
+                >
                     <button className="close-btn" onClick={() => setIsOpen(false)}>×</button>
+
                     <h2 className="text-gradient">YOUR ORDER</h2>
 
-                    {cart.length === 0 ? <p className="empty-msg">購物車目前是空的</p> : (
-                        <ul className="cart-items">
-                            {cart.map(item => (
-                                <li key={item.ITEM_ID}>
-                                    <div className="cart-item-info">
-                                        <div className="name">{item.ITEM_NAME}</div>
-                                        <div className="price">${item.ITEM_PRICE}</div>
-                                    </div>
-                                    <div className="qty-control">
-                                        <button onClick={() => updateQuantity(item.ITEM_ID, -1)}>-</button>
-                                        <span>{item.quantity}</span>
-                                        <button onClick={() => updateQuantity(item.ITEM_ID, 1)}>+</button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-
-                    <div className="cart-footer">
-                        <div className="total-row">
-                            <span>總計</span>
-                            <span>${totalPrice}</span>
+                    {cart.length === 0 ? (
+                        <div className="empty-cart-container">
+                            <p className="empty-msg">購物車目前是空的</p>
                         </div>
-                        <button
-                            className="checkout-btn"
-                            disabled={cart.length === 0 || isSubmitting}
-                            onClick={handleCheckout}
-                        >
-                            {isSubmitting ? 'PROCESSING...' : 'CONFIRM & CHECKOUT'}
-                        </button>
-                        {isOrderSuccess && (
-                            <div className="order-success-overlay">
-                                <div className="order-success-modal">
-                                    <div className="success-icon">✓</div>
-                                    <h2>ORDER PLACED!</h2>
-                                    <p>您的訂單已成功送出，請靜候服務人員。</p>
-                                    <button onClick={() => setIsOrderSuccess(false)}>關閉</button>
+                    ) : (
+                        <>
+                            <ul className="cart-items">
+                                {cart.map((item, index) => (
+                                    <li key={`${item.ITEM_ID}-${index}`} style={{ animationDelay: `${index * 0.05}s` }}>
+                                        <div className="cart-item-info">
+                                            <div className="name">{item.ITEM_NAME}</div>
+                                            <div className="price">${item.ITEM_PRICE}</div>
+                                        </div>
+                                        <div className="qty-control">
+                                            <button onClick={() => updateQuantity(item.ITEM_ID, -1)}>−</button>
+                                            <span className="qty-number">{item.quantity}</span>
+                                            <button onClick={() => updateQuantity(item.ITEM_ID, 1)}>+</button>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <div className="cart-footer">
+                                <div className="total-row">
+                                    <span>TOTAL</span>
+                                    <span className="total-price">${totalPrice}</span>
                                 </div>
+                                <button
+                                    className="checkout-btn"
+                                    disabled={cart.length === 0 || isSubmitting}
+                                    onClick={handleCheckout}
+                                >
+                                    {isSubmitting ? 'SENDING...' : 'CONFIRM & CHECKOUT'}
+                                </button>
                             </div>
-                        )}
-                    </div>
+                        </>
+                    )}
                 </div>
             </div>
+
+            {/* 4. 訂單成功全螢幕提示彈窗 (獨立於 isOpen) */}
+            {isOrderSuccess && (
+                <div className="order-success-overlay">
+                    <div className="order-success-modal">
+                        <div className="success-icon-wrapper">
+                            <div className="success-icon">✓</div>
+                        </div>
+                        <h2>ORDER PLACED!</h2>
+                        <p>您的訂單已成功送出</p>
+                        <p className="sub-text">請靜候服務人員為您送餐</p>
+                        <button
+                            className="close-success-btn"
+                            onClick={() => setIsOrderSuccess(false)}
+                        >
+                            我知道了
+                        </button>
+                    </div>
+                </div>
+            )}
         </>
     );
 };

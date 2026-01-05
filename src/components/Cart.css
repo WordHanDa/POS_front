@@ -173,24 +173,26 @@
 /* 成功彈窗遮罩 */
 .order-success-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85); /* 稍微深一點的背景遮罩 */
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 3000;
-  animation: fadeIn 0.4s ease;
+  z-index: 3000; /* 確保在最上層 */
+  backdrop-filter: blur(5px); /* 背景模糊增加質感 */
+  animation: fadeIn 0.3s ease-out;
 }
 
-/* 成功彈窗主體 */
 .order-success-modal {
   background: #1a1a1a;
-  border: 1px solid #b2966b;
   padding: 40px;
+  border-radius: 15px;
+  border: 1px solid #b2966b;
   text-align: center;
-  border-radius: 10px;
-  max-width: 90%;
-  width: 320px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 .success-icon {
