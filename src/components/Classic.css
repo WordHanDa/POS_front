@@ -86,7 +86,7 @@ body {
     word-break: keep-all;
     flex: 1;
     min-width: 0;
-    /* Allows flex item to shrink below content size */
+    text-align: left;
 }
 
 .item-name :lang(zh) {
@@ -119,9 +119,10 @@ body {
     font-weight: 300;
     color: rgba(192, 192, 192, 0.85);
     text-shadow: none;
-    font-size: 16px;
+    font-size: 14px;
     font-style: italic;
     line-height: 1.6;
+    text-align: left;
 }
 
 .section-subtitle {

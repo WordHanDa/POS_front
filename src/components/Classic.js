@@ -3,48 +3,77 @@ import { Link } from 'react-router-dom';
 import './Classic.css';
 
 function Classic({ BASE_API }) {
-  const [items, setItems] = useState([]);
+  const [sparklingItems, setSparklingItems] = useState([]);
+  const [shotItems, setShotItems] = useState([]);
+  const [gatheringDrinksItems, setGatheringDrinksItems] = useState([]);
+  const [tastingMenuItems, setTastingMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 串接您的 API 位址
-    fetch(`${BASE_API}/ITEM_BY_TYPE?type=aaa`)
-      .then(response => response.json())
-      .then(data => {
-        setItems(data);
+    setLoading(true);
+
+    Promise.all([
+      fetch(`${BASE_API}/ITEM_BY_TYPE?type=SPARKLING`).then(res => res.json()),
+      fetch(`${BASE_API}/ITEM_BY_TYPE?type=SHOT`).then(res => res.json()),
+      fetch(`${BASE_API}/ITEM_BY_TYPE?type=GATHERING_DRINKS`).then(res => res.json()),
+      fetch(`${BASE_API}/ITEM_BY_TYPE?type=TASTING_MENU`).then(res => res.json())
+    ])
+      .then(([sparkling, shot, gathering, tasting]) => {
+        setSparklingItems(sparkling);
+        setShotItems(shot);
+        setGatheringDrinksItems(gathering); // 修正：賦值給 state
+        setTastingMenuItems(tasting);       // 修正：賦值給 state
         setLoading(false);
       })
       .catch(error => {
-        console.error('Error fetching data:', error);
+        console.error('Fetch error:', error);
         setLoading(false);
       });
-  }, []);
+  }, [BASE_API]);
 
-  if (loading) {
-    return <div className="menu-container" style={{color: '#fff'}}>Loading...</div>;
-  }
+  if (loading) return <div className="menu-container" style={{ color: '#fff' }}>Loading...</div>;
 
   return (
     <div className="classic-page">
       <div className="menu-container">
         <Link to="/" className="back-link" style={{ color: '#b2966b', textDecoration: 'none' }}>← BACK</Link>
-        
-        <div className="section-title text-gradient">MENU SELECTION</div>
-        
+
+        {/* SPARKLING */}
+        <div className="section-title text-gradient">SPARKLING 氣泡</div>
         <div className="menu-grid">
-          {items.map((item) => (
-            <div className="menu-item" key={item.ITEM_ID}>
-              <div className="item-header">
-                {/* 使用 API 返回的 ITEM_NAME 與 ITEM_PRICE */}
-                <span className="item-name">{item.ITEM_NAME}</span>
-                <span className="item-price">{item.ITEM_PRICE}</span>
-              </div>
-              {/* 使用 API 返回的 Description */}
-              <div className="item-description">{item.Description}</div>
-            </div>
-          ))}
+          {sparklingItems.map((item) => <MenuItem key={item.ITEM_ID} item={item} />)}
+        </div>
+
+        {/* SHOTS */}
+        <div className="section-title text-gradient">SHOTS 一口酒</div>
+        <div className="menu-grid">
+          {shotItems.map((item) => <MenuItem key={item.ITEM_ID} item={item} />)}
+        </div>
+
+        {/* GATHERING DRINKS */}
+        <div className="section-title text-gradient">GATHERING DRINKS 聚會酒</div>
+        <div className="menu-grid">
+          {gatheringDrinksItems.map((item) => <MenuItem key={item.ITEM_ID} item={item} />)}
+        </div>
+
+        {/* TASTING MENU */}
+        <div className="section-title text-gradient">TASTING MENU 品嘗菜單</div>
+        <div className="menu-grid">
+          {tastingMenuItems.map((item) => <MenuItem key={item.ITEM_ID} item={item} />)}
         </div>
       </div>
+    </div>
+  );
+}
+
+function MenuItem({ item }) {
+  return (
+    <div className="menu-item">
+      <div className="item-header">
+        <span className="item-name">{item.ITEM_NAME}</span>
+        <span className="item-price">{item.ITEM_PRICE}</span>
+      </div>
+      <div className="item-description">{item.Description}</div>
     </div>
   );
 }
