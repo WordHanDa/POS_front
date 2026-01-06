@@ -63,7 +63,7 @@ const CartDrawer = ({ BASE_API }) => {
 
             const orderData = {
                 items: cart, // 每個 item 包含 ITEM_ID, quantity, ITEM_PRICE, note
-                note:"皮炎"
+                note: "皮炎"
             };
 
             // 將 SEAT_ID 作為 Query Parameter 傳送
