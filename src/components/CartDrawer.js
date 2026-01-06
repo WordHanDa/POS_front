@@ -60,10 +60,23 @@ const CartDrawer = ({ BASE_API }) => {
         try {
             // 從 Cookie 讀取桌號，若不存在則預設為 "1"
             const savedSeat = Cookies.get('customer_seat_ID') || '0';
-
+            let orderGeneralNote = '手機自助點餐';
+            const cartJson = Cookies.get('shopping_cart');
+            if (cartJson) {
+                const parsedCart = JSON.parse(cartJson);
+                // 2. 取得第一個品項的 note (如果存在的話)
+                if (parsedCart.length > 0 && parsedCart[0].note) {
+                    orderGeneralNote = parsedCart[0].note;
+                }
+            }
             const orderData = {
-                items: cart, // 每個 item 包含 ITEM_ID, quantity, ITEM_PRICE, note
-                note: "aaaaaaaa"
+                items: cart.map(item => ({
+                    ITEM_ID: item.ITEM_ID,
+                    quantity: item.quantity,
+                    ITEM_PRICE: item.ITEM_PRICE,
+                    note: item.note || "" // 每個品項的個別要求
+                })),
+                note: orderGeneralNote // 整筆訂單的來源或總結
             };
 
             // 將 SEAT_ID 作為 Query Parameter 傳送
