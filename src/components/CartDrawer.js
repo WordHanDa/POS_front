@@ -62,14 +62,8 @@ const CartDrawer = ({ BASE_API }) => {
             const savedSeat = Cookies.get('customer_seat_ID') || '0';
 
             const orderData = {
-                items: cart.map(item => ({
-                ITEM_ID: item.ITEM_ID,
-                quantity: item.quantity,
-                ITEM_PRICE: item.ITEM_PRICE,
-                note: item.note || "" // 確保傳送字串而非 undefined
-            })),
-            // 這是整筆訂單的總備註
-            order_note: "皮炎"
+                items: cart, // 每個 item 包含 ITEM_ID, quantity, ITEM_PRICE, note
+                note:"皮炎"
             };
 
             // 將 SEAT_ID 作為 Query Parameter 傳送
