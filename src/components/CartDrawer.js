@@ -69,7 +69,7 @@ const CartDrawer = ({ BASE_API }) => {
                 note: item.note || "" // 確保傳送字串而非 undefined
             })),
             // 這是整筆訂單的總備註
-            order_note: "手機自助點餐"
+            order_note: "皮炎"
             };
 
             // 將 SEAT_ID 作為 Query Parameter 傳送
