@@ -21,31 +21,55 @@ const MenuSection = ({ type, title, BASE_API }) => {
     return () => observer.disconnect();
   }, [hasLoaded, type]); // 加入 type 確保類別改變時邏輯正確
 
-  const fetchData = async () => {
-    setLoading(true);
-    setError(false); // 開始抓取前重置錯誤狀態
-    try {
-      const res = await fetch(`${BASE_API}/ITEM_BY_TYPE?type=${type}`);
-      
-      // 檢查回應是否成功 (處理 500, 404 等)
-      if (!res.ok) throw new Error('Server Error');
-
-      const data = await res.json();
-      
-      // 確保 data 是陣列才設定，否則報錯
-      if (Array.isArray(data)) {
-        setItems(data);
-        setHasLoaded(true);
-      } else {
-        throw new Error('Data format error');
+  const fetchWithRetry = async (url, retries = 2, delay = 1000) => {
+  try {
+    const res = await fetch(url);
+    
+    // 只有在 500 系列錯誤時才重試，減少無謂的 400 系列請求重試
+    if (!res.ok) {
+      if (res.status >= 500 && retries > 0) {
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return fetchWithRetry(url, retries - 1, delay * 2);
       }
-    } catch (error) {
-      console.error("Fetch error:", error);
-      setError(true); // 捕捉到任何錯誤就設為 true
-    } finally {
-      setLoading(false);
+      throw new Error(`HTTP ${res.status}`);
     }
-  };
+    return await res.json();
+  } catch (err) {
+    if (retries > 0) {
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return fetchWithRetry(url, retries - 1, delay * 2);
+    }
+    throw err;
+  }
+};
+
+  const fetchData = async () => {
+  // 1. 資源檢查：若已載入或正在載入中，則不重複請求
+  if (hasLoaded || loading) return;
+
+  setLoading(true);
+  setError(false);
+
+  try {
+    // 2. A 請求：嘗試獲取數據，內建自動重試機制
+    const data = await fetchWithRetry(`${BASE_API}/ITEM_BY_TYPE?type=${type}`, 2);
+
+    // 3. 資料驗證：確保收到正確格式才進行狀態更新
+    if (Array.isArray(data)) {
+      setItems(data);
+      setHasLoaded(true); 
+      // 可以在此處緊接著請求 B (例如：該類別的促銷資訊或庫存狀態)
+      // await fetchPromotionData(type); 
+    } else {
+      throw new Error("Invalid data structure");
+    }
+  } catch (err) {
+    console.error("Final Request Failure:", err);
+    setError(true);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const addToCart = (item) => {
     const existingCart = Cookies.get('shopping_cart');
@@ -68,18 +92,37 @@ const MenuSection = ({ type, title, BASE_API }) => {
   return (
     <div className="menu-section-wrapper" ref={sectionRef}>
       <div className="section-title text-gradient">{title}</div>
-      
+
       {loading && <p className="loading-text">Loading...</p>}
 
       {/* 發生錯誤時顯示重新整理字串 */}
       {error ? (
-        <div style={{ textAlign: 'center', padding: '20px', color: '#b2966b' }}>
-          <p>發生錯誤，請重新整理</p>
-          <button 
-            onClick={() => fetchData()} 
-            style={{ background: 'none', border: '1px solid #b2966b', color: '#b2966b', padding: '5px 10px', cursor: 'pointer', marginTop: '10px' }}
+        <div className="error-container" style={{
+          textAlign: 'center',
+          padding: '40px 20px',
+          background: 'rgba(178, 150, 107, 0.05)',
+          borderRadius: '8px',
+          border: '1px dashed #b2966b',
+          margin: '20px 0'
+        }}>
+          <i className="fa-solid fa-circle-exclamation" style={{ fontSize: '2rem', marginBottom: '15px', color: '#b2966b' }}></i>
+          <p style={{ color: '#b2966b', fontSize: '1.1rem', fontWeight: '500' }}>伺服器忙碌中，請稍後再試</p>
+          <p style={{ color: '#888', fontSize: '0.9rem', marginBottom: '20px' }}>系統已嘗試自動修復，若問題持續請點擊下方按鈕</p>
+          <button
+            onClick={() => fetchData()}
+            className="retry-btn"
+            style={{
+              background: '#b2966b',
+              color: '#000',
+              border: 'none',
+              padding: '10px 25px',
+              borderRadius: '4px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: '0.3s'
+            }}
           >
-            重試
+            點擊重試
           </button>
         </div>
       ) : (
