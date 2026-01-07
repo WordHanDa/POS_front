@@ -52,7 +52,13 @@ const CartDrawer = ({ BASE_API }) => {
         Cookies.set('shopping_cart', JSON.stringify(newCart), { expires: 7, path: '/' });
     };
 
-    const totalPrice = cart.reduce((sum, item) => sum + (item.ITEM_PRICE * item.quantity), 0);
+    const { totalPrice, totalQuantity } = React.useMemo(() => {
+        return cart.reduce((acc, item) => {
+            acc.totalPrice += item.ITEM_PRICE * item.quantity;
+            acc.totalQuantity += item.quantity;
+            return acc;
+        }, { totalPrice: 0, totalQuantity: 0 });
+    }, [cart]);
 
     // 在 CartDrawer.js 內部
     const handleFinalSubmit = async () => {
@@ -111,7 +117,7 @@ const CartDrawer = ({ BASE_API }) => {
                 <div className="menu-icon">
                     <i className="fa-solid fa-cart-shopping"></i>
                 </div>
-                {cart.length > 0 && <span className="count">{cart.length}</span>}
+                {totalQuantity > 0 && <span className="count">{totalQuantity}</span>}
             </div>
 
             {/* 2. 購物車側欄 */}
