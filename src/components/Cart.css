@@ -362,3 +362,105 @@
   color: #ffffffa3 !important;
   font-size: 30px !important;
 }
+
+/* --- 通用彈窗遮罩 (確保所有 Modal 統一) --- */
+.order-success-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000; /* 提升層級避免被側欄擋住 */
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* --- 彈窗本體容器 --- */
+.order-success-modal {
+    background: #1a1a1a;
+    width: 90%;
+    max-width: 400px;
+    max-height: 85vh; /* 限制高度防止超出螢幕 */
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid #b2966b;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* --- 歷史紀錄列表專用 (滾動控制) --- */
+.history-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    margin: 15px 0;
+    padding-right: 5px;
+}
+
+.history-scroll-area::-webkit-scrollbar {
+    width: 4px;
+}
+
+.history-scroll-area::-webkit-scrollbar-thumb {
+    background: #b2966b;
+    border-radius: 10px;
+}
+
+/* --- 列表項目樣式 --- */
+.confirm-list {
+    list-style: none;
+    padding: 0; margin: 0;
+}
+
+.confirm-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid #333;
+}
+
+.confirm-item-detail {
+    text-align: left;
+    color: #eee;
+}
+
+.history-time {
+    color: #cfcfcf;
+    margin-top: 4px;
+}
+
+/* --- 按鈕樣式 --- */
+.view-history-btn {
+    width: 100%;
+    margin: 10px 0 20px;
+    background: #222;
+    border: 1px solid #444;
+    color: #b2966b;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.view-history-btn:hover {
+    border-color: #b2966b;
+    background: #2a2a2a;
+}
+
+.close-success-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid #b2966b;
+    color: #b2966b;
+    padding: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
