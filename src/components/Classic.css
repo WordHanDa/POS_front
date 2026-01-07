@@ -84,8 +84,8 @@
 }
 
 .classic-page .add-hint {
+    background: #b2966b;
     font-size: 0.7rem;
-    color: #b2966b;
     text-align: right;
     margin-top: 5px;
     opacity: 0;
