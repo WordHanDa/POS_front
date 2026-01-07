@@ -30,6 +30,16 @@
     color: #b2916b;
 }
 
+.special-page .add-hint {
+    background: #b2966b;
+    font-size: 0.7rem;
+    color: floralwhite;
+    text-align: center;
+    margin-top: 5px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
 .special-page .menu-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
