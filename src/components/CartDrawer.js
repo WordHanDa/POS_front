@@ -4,12 +4,30 @@ import './Cart.css';
 
 const CartDrawer = ({ BASE_API }) => {
     const [cart, setCart] = useState([]);
+    const [activeOrders, setActiveOrders] = useState([]); // 儲存資料庫中已送出的訂單
     const [isOpen, setIsOpen] = useState(false);
     const [isBumping, setIsBumping] = useState(false);
     const [isOrderSuccess, setIsOrderSuccess] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isConfirming, setIsConfirming] = useState(false);
 
+    // 1. 讀取該桌已送出但尚未結帳的訂單 (從 API)
+    const loadActiveOrders = async () => {
+        const savedSeat = Cookies.get('customer_seat_ID');
+        if (!savedSeat) return;
+
+        try {
+            const response = await fetch(`${BASE_API}/ACTIVE_ORDERS_BY_SEAT/${savedSeat}`);
+            if (response.ok) {
+                const data = await response.json();
+                setActiveOrders(data);
+            }
+        } catch (error) {
+            console.error("無法獲取已點訂單:", error);
+        }
+    };
+
+    // 2. 讀取本地購物車緩存 (從 Cookie)
     const loadCart = () => {
         const savedCart = Cookies.get('shopping_cart');
         if (savedCart) {
@@ -23,11 +41,14 @@ const CartDrawer = ({ BASE_API }) => {
 
     useEffect(() => {
         loadCart();
+        // 當側欄開啟時，更新已送出的訂單狀態
+        if (isOpen) {
+            loadActiveOrders();
+        }
         const interval = setInterval(loadCart, 1000);
         return () => clearInterval(interval);
-    }, []);
+    }, [isOpen]); // 加入 isOpen 依賴
 
-    // 新增：處理備註更動
     const updateNote = (itemId, noteValue) => {
         const newCart = cart.map(item => {
             if (item.ITEM_ID === itemId) {
@@ -60,32 +81,26 @@ const CartDrawer = ({ BASE_API }) => {
         }, { totalPrice: 0, totalQuantity: 0 });
     }, [cart]);
 
-    // 在 CartDrawer.js 內部
     const handleFinalSubmit = async () => {
         setIsSubmitting(true);
         try {
-            // 從 Cookie 讀取桌號，若不存在則預設為 "1"
             const savedSeat = Cookies.get('customer_seat_ID') || '0';
             let orderGeneralNote = '手機自助點餐';
-            const cartJson = Cookies.get('shopping_cart');
-            if (cartJson) {
-                const parsedCart = JSON.parse(cartJson);
-                // 2. 取得第一個品項的 note (如果存在的話)
-                if (parsedCart.length > 0 && parsedCart[0].note) {
-                    orderGeneralNote = parsedCart[0].note;
-                }
+            
+            if (cart.length > 0 && cart[0].note) {
+                orderGeneralNote = cart[0].note;
             }
+
             const orderData = {
                 items: cart.map(item => ({
                     ITEM_ID: item.ITEM_ID,
                     quantity: item.quantity,
                     ITEM_PRICE: item.ITEM_PRICE,
-                    note: item.note || "" // 每個品項的個別要求
+                    note: item.note || ""
                 })),
-                note: orderGeneralNote // 整筆訂單的來源或總結
+                note: orderGeneralNote
             };
 
-            // 將 SEAT_ID 作為 Query Parameter 傳送
             const response = await fetch(`${BASE_API}/PLACE_ORDER?SEAT_ID=${savedSeat}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -98,6 +113,8 @@ const CartDrawer = ({ BASE_API }) => {
                 setIsOpen(false);
                 setIsConfirming(false);
                 setTimeout(() => setIsOrderSuccess(true), 400);
+                // 送出成功後清空已點清單緩存，下次開啟會重新抓取
+                setActiveOrders([]);
             } else {
                 const errData = await response.json();
                 alert(`訂單送出失敗: ${errData.error || '未知錯誤'}`);
@@ -124,13 +141,39 @@ const CartDrawer = ({ BASE_API }) => {
             <div className={`cart-overlay ${isOpen ? 'active' : ''}`} onClick={() => setIsOpen(false)}>
                 <div className={`cart-panel ${isOpen ? 'open' : ''}`} onClick={(e) => e.stopPropagation()}>
                     <button className="close-btn" onClick={() => setIsOpen(false)}>×</button>
+                    
                     <div className="seat-display">
                         SEAT: {Cookies.get('customer_seat_name') || '未設定'}
                     </div>
+                    
                     <h2 className="text-gradient">YOUR ORDER</h2>
 
+                    {/* A. 已送出清單區塊 (續點顯示) */}
+                    {activeOrders.length > 0 && (
+                        <div className="active-orders-section">
+                            <p className="section-title">已下單 (製作中)</p>
+                            <ul className="active-items-list">
+                                {activeOrders.map((item, idx) => (
+                                    <li key={idx} className="active-item-row">
+                                        <div className="active-item-info">
+                                            <span className="name">{item.ITEM_NAME} x {item.QUANTITY}</span>
+                                            {item.ITEM_NOTE && <span className="note-text">({item.ITEM_NOTE})</span>}
+                                        </div>
+                                        <span className="status-badge">已收單</span>
+                                    </li>
+                                ))}
+                            </ul>
+                            <div className="list-divider"></div>
+                        </div>
+                    )}
+
+                    {/* B. 購物車加點區塊 */}
                     {cart.length === 0 ? (
-                        <div className="empty-cart-container"><p className="empty-msg">購物車目前是空的</p></div>
+                        <div className="empty-cart-container">
+                            <p className="empty-msg">
+                                {activeOrders.length > 0 ? "尚無加點品項" : "購物車目前是空的"}
+                            </p>
+                        </div>
                     ) : (
                         <>
                             <ul className="cart-items">
@@ -147,7 +190,6 @@ const CartDrawer = ({ BASE_API }) => {
                                                 <button onClick={() => updateQuantity(item.ITEM_ID, 1)}>+</button>
                                             </div>
                                         </div>
-                                        {/* 新增：個別品項備註輸入框 */}
                                         <div className="item-note-row">
                                             <input
                                                 type="text"
@@ -160,8 +202,13 @@ const CartDrawer = ({ BASE_API }) => {
                                 ))}
                             </ul>
                             <div className="cart-footer">
-                                <div className="total-row"><span>TOTAL</span><span className="total-price">${totalPrice}</span></div>
-                                <button className="checkout-btn" onClick={() => setIsConfirming(true)}>CONFIRM & CHECKOUT</button>
+                                <div className="total-row">
+                                    <span>SUBTOTAL</span>
+                                    <span className="total-price">${totalPrice}</span>
+                                </div>
+                                <button className="checkout-btn" onClick={() => setIsConfirming(true)}>
+                                    CONFIRM & CHECKOUT
+                                </button>
                             </div>
                         </>
                     )}
@@ -184,18 +231,18 @@ const CartDrawer = ({ BASE_API }) => {
                                 </li>
                             ))}
                         </ul>
-                        <div className="confirm-total">總計：${totalPrice}</div>
+                        <div className="confirm-total">本次預計加點：${totalPrice}</div>
                         <div className="confirm-buttons">
                             <button className="btn-cancel" onClick={() => setIsConfirming(false)}>返回修改</button>
                             <button className="btn-confirm" onClick={handleFinalSubmit} disabled={isSubmitting}>
-                                {isSubmitting ? '送出中...' : '下單'}
+                                {isSubmitting ? '送出中...' : '確認加點'}
                             </button>
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* 4. 成功提示 (略，與之前相同) */}
+            {/* 4. 成功提示 */}
             {isOrderSuccess && (
                 <div className="order-success-overlay">
                     <div className="order-success-modal">
