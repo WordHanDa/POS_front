@@ -173,7 +173,7 @@ const CartDrawer = ({ BASE_API }) => {
                             fetchActiveOrders();
                         }}
                     >
-                        <i className="fa-solid fa-clock-rotate-left"></i> 查看已點品項 (進行中)
+                        <i className="fa-solid fa-clock-rotate-left"></i> 查看已點品項
                     </button>
 
                     {cart.length === 0 ? (

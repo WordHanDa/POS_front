@@ -12,7 +12,7 @@
   justify-content: center;
   font-size: 26px;
   cursor: pointer;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
   z-index: 2000;
   transition: transform 0.2s;
 }
@@ -33,8 +33,11 @@
 /* 側欄背景遮罩 */
 .cart-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.8);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(4px);
   z-index: 2001;
   display: flex;
@@ -69,17 +72,33 @@
 
 /* 動畫定義 */
 @keyframes cartBounce {
-  0% { transform: scale(1); }
-  30% { transform: scale(1.3); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  30% {
+    transform: scale(1.3);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
+
 .cart-badge.bump {
   animation: cartBounce 0.4s ease;
 }
 
 @keyframes slideUp {
-  from { transform: translateY(15px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* 清單與捲軸 */
@@ -99,8 +118,13 @@
   animation: slideUp 0.4s ease forwards;
 }
 
-.cart-items::-webkit-scrollbar { width: 4px; }
-.cart-items::-webkit-scrollbar-thumb { background: #b2966b; }
+.cart-items::-webkit-scrollbar {
+  width: 4px;
+}
+
+.cart-items::-webkit-scrollbar-thumb {
+  background: #b2966b;
+}
 
 .checkout-btn {
   background: #b2966b;
@@ -127,6 +151,7 @@
   color: #b2966b;
   cursor: pointer;
 }
+
 .qty-control {
   display: flex;
   align-items: center;
@@ -177,12 +202,15 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.85); /* 稍微深一點的背景遮罩 */
+  background: rgba(0, 0, 0, 0.85);
+  /* 稍微深一點的背景遮罩 */
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 3000; /* 確保在最上層 */
-  backdrop-filter: blur(5px); /* 背景模糊增加質感 */
+  z-index: 3000;
+  /* 確保在最上層 */
+  backdrop-filter: blur(5px);
+  /* 背景模糊增加質感 */
   animation: fadeIn 0.3s ease-out;
 }
 
@@ -192,7 +220,7 @@
   border-radius: 15px;
   border: 1px solid #b2966b;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .success-icon {
@@ -233,131 +261,148 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .button-group-vertical {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 .confirm-hint {
-    color: #ff4757;
-    font-size: 0.85rem;
-    text-align: center;
-    margin-bottom: 10px;
+  color: #ff4757;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .back-btn {
-    background: transparent;
-    border: 1px solid #555;
-    color: #888;
-    padding: 12px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: 0.3s;
+  background: transparent;
+  border: 1px solid #555;
+  color: #888;
+  padding: 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 .back-btn:hover {
-    color: #fff;
-    border-color: #fff;
+  color: #fff;
+  border-color: #fff;
 }
 
 .final-confirm {
-    background: #b2966b !important;
-    animation: pulse 1.5s infinite; /* 增加一個微微跳動的效果引導點擊 */
+  background: #b2966b !important;
+  animation: pulse 1.5s infinite;
+  /* 增加一個微微跳動的效果引導點擊 */
 }
 
 @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(178, 150, 107, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(178, 150, 107, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(178, 150, 107, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(178, 150, 107, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(178, 150, 107, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(178, 150, 107, 0);
+  }
 }
 
 /* 確認模式下讓清單縮小一點，留位置給提示文字 */
 .confirm-mode .cart-items {
-    max-height: 40vh;
+  max-height: 40vh;
 }
 
 .cart-item-li {
-    display: flex;
-    flex-direction: column; /* 讓備註排在品項下面 */
-    padding: 15px 0;
-    border-bottom: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  /* 讓備註排在品項下面 */
+  padding: 15px 0;
+  border-bottom: 1px solid #333;
 }
 
 .item-main-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .item-note-row {
-    margin-top: 8px;
+  margin-top: 8px;
 }
 
 .item-note-row input {
-    width: 100%;
-    background: #222;
-    border: 1px solid #444;
-    color: #ccc;
-    padding: 5px 10px;
-    font-size: 0.85rem;
-    border-radius: 4px;
-    outline: none;
-    transition: border 0.3s;
+  width: 100%;
+  background: #222;
+  border: 1px solid #444;
+  color: #ccc;
+  padding: 5px 10px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  outline: none;
+  transition: border 0.3s;
 }
 
 .item-note-row input:focus {
-    border-color: #b2966b;
+  border-color: #b2966b;
 }
 
 /* 確認視窗中的備註字體樣式 */
 .confirm-note {
-    display: block;
-    font-size: 0.8rem;
-    color: #b2966b;
-    margin-left: 5px;
+  display: block;
+  font-size: 0.8rem;
+  color: #b2966b;
+  margin-left: 5px;
 }
 
 .confirm-item-detail {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
-.name{
-    font-size: 16px;
-    font-weight: 500;
-    color: #eee;
+
+.name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #eee;
 }
 
 .qty-number {
-    font-size: 20px;
-    color: #bbb;
-    margin-top: 4px;
+  font-size: 20px;
+  color: #bbb;
+  margin-top: 4px;
 }
 
 .seat-display {
-    margin-top: 5px;
-    font-size: 14px;
-    color: #888;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #888;
 }
 
 .cart-badge .menu-icon {
-    position: relative;
-    width: 30px;
-    height: 30px;
-    border: 1px solid var(--gold);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 0;
-    transition: all 0.5s ease;
+  position: relative;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+  transition: all 0.5s ease;
 }
+
 .cart-badge i {
   color: #ffffffa3 !important;
   font-size: 30px !important;
@@ -365,102 +410,114 @@
 
 /* --- 通用彈窗遮罩 (確保所有 Modal 統一) --- */
 .order-success-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5000; /* 提升層級避免被側欄擋住 */
-    animation: fadeIn 0.3s ease-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+  /* 提升層級避免被側欄擋住 */
+  animation: fadeIn 0.3s ease-out;
 }
 
 /* --- 彈窗本體容器 --- */
 .order-success-modal {
-    background: #1a1a1a;
-    width: 90%;
-    max-width: 400px;
-    max-height: 85vh; /* 限制高度防止超出螢幕 */
-    padding: 30px;
-    border-radius: 15px;
-    border: 1px solid #b2966b;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  background: #1a1a1a;
+  width: 90%;
+  max-width: 400px;
+  max-height: 85vh;
+  /* 限制高度防止超出螢幕 */
+  padding: 30px;
+  border-radius: 15px;
+  border: 1px solid #b2966b;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 /* --- 歷史紀錄列表專用 (滾動控制) --- */
 .history-scroll-area {
-    flex: 1;
-    overflow-y: auto;
-    margin: 15px 0;
-    padding-right: 5px;
+  flex: 1;
+  overflow-y: auto;
+  margin: 15px 0;
+  padding-right: 5px;
 }
 
 .history-scroll-area::-webkit-scrollbar {
-    width: 4px;
+  width: 4px;
 }
 
 .history-scroll-area::-webkit-scrollbar-thumb {
-    background: #b2966b;
-    border-radius: 10px;
+  background: #b2966b;
+  border-radius: 10px;
 }
 
 /* --- 列表項目樣式 --- */
 .confirm-list {
-    list-style: none;
-    padding: 0; margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .confirm-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 12px 0;
-    border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid #333;
 }
 
 .confirm-item-detail {
-    text-align: left;
-    color: #eee;
+  text-align: left;
+  color: #eee;
 }
 
 .history-time {
-    color: #cfcfcf;
-    margin-top: 4px;
+  font: 1em Medium Italic;
+  color: #cfcfcf;
+  margin-top: 4px;
 }
 
+.history-summary-row {
+  margin-bottom: 10px;
+}
+.gold-text{
+  font: 1em Medium Italic;
+}
 /* --- 按鈕樣式 --- */
 .view-history-btn {
-    width: 100%;
-    margin: 10px 0 20px;
-    background: #222;
-    border: 1px solid #444;
-    color: #b2966b;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: 0.3s;
+  width: 100%;
+  margin: 10px 0 20px;
+  background: #222;
+  border: 1px solid #444;
+  color: #b2966b;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: 0.3s;
 }
 
 .view-history-btn:hover {
-    border-color: #b2966b;
-    background: #2a2a2a;
+  border-color: #b2966b;
+  background: #2a2a2a;
 }
 
 .close-success-btn {
-    width: 100%;
-    background: transparent;
-    border: 1px solid #b2966b;
-    color: #b2966b;
-    padding: 12px;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
+  width: 100%;
+  background: transparent;
+  border: 1px solid #b2966b;
+  color: #b2966b;
+  padding: 12px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
 }
