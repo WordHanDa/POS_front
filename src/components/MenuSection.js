@@ -9,6 +9,14 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
   const sectionRef = useRef(null);
   const abortControllerRef = useRef(null);
 
+  const formatDescription = (text) => {
+    if (!text) return "";
+    return text
+      .replace(/\{&lt;br\/&gt;\}/g, '\n') // 處理您之前提到的奇怪格式
+      .replace(/\{br\}/g, '\n')          // 處理常見的自定義換行符
+      .replace(/<br\s*\/?>/gi, '\n');    // 處理標準 HTML 換行標籤
+  };
+  
   useEffect(() => {
     let timeoutId;
 
@@ -24,8 +32,8 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
           }, staggerDelay);
         }
       },
-      { 
-        threshold: 0.05, 
+      {
+        threshold: 0.05,
         rootMargin: '0px 0px 100px 0px' // 提前一點點觸發
       }
     );
@@ -70,8 +78,8 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
 
     try {
       const data = await fetchWithRetry(
-        `${BASE_API}/ITEM_BY_TYPE?type=${type}`, 
-        abortControllerRef.current.signal, 
+        `${BASE_API}/ITEM_BY_TYPE?type=${type}`,
+        abortControllerRef.current.signal,
         2
       );
 
@@ -137,7 +145,9 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
                 <span className="item-name">{item.ITEM_NAME}</span>
                 <span className="item-price">${item.ITEM_PRICE}</span>
               </div>
-              <div className="item-description">{item.Description}</div>
+              <div className="item-description" style={{ whiteSpace: 'pre-line' }}>
+                {formatDescription(item.Description)}
+              </div>
               <div className="add-hint">+ ADD TO CART</div>
             </div>
           ))}
