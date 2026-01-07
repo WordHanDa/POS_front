@@ -259,7 +259,7 @@ const CartDrawer = ({ BASE_API }) => {
 
                         {activeOrders.length > 0 && (
                             <div className="history-summary-row">
-                                <span>未結總計</span>
+                                <span>總計</span>
                                 <span className="gold-text">
                                     ${activeOrders.reduce((sum, i) => sum + (i.PRICE_AT_SALE * i.QUANTITY), 0)}
                                 </span>
