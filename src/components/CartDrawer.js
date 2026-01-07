@@ -26,8 +26,8 @@ const CartDrawer = ({ BASE_API }) => {
     // 在 CartDrawer.js 內修改 fetchActiveOrders 函式
     const fetchActiveOrders = async () => {
         const seatId = Cookies.get('customer_seat_id');
-        // 確保 seatId 存在且不為 '0'
-        if (!seatId || seatId === '0') {
+        // 確保 seatId 存在
+        if (!seatId) {
             setActiveOrders([]);
             return;
         }
