@@ -532,10 +532,10 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 22px;
-    height: 22px;
+    width: 110px;
+    height: 37px;
     background: #b2966b;
-    border-radius: 50%;
+    border-radius: 10%;
     z-index: 9999;
     pointer-events: none;
     box-shadow: 0 0 12px rgba(178, 150, 107, 0.8);
