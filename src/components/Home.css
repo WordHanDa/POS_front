@@ -72,7 +72,6 @@ body {
     font-weight: 300;
     letter-spacing: 0.15em;
     /* 修正：font-family 應該放在這裡而非單獨寫 font-style */
-    font-family: 'Noto Serif JP', serif; 
     width: 90%;
     line-height: 1.4;
 }
@@ -432,10 +431,10 @@ body {
 }
 
 .home-page .header-sublabel {
-    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    font-size: 1.2rem;
     color: var(--light-white);
     margin-bottom: 10px;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.1em;
 }
 
 .social-links a {
@@ -490,8 +489,8 @@ body {
     align-items: center;
     z-index: 1;
     pointer-events: none;
-    padding: 0 20px; /* 增加兩側緩衝，防止縮小時文字撞牆 */
-    text-align: center;
+
+    /* --- 加入以下動畫設定 --- */
     animation: fadeInDown 1.5s ease-out forwards;
 }
 /* 標題先出現 */
