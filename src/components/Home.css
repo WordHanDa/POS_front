@@ -66,12 +66,15 @@ body {
 }
 
 .home-page h2 {
-    font-size: 1.8rem;
+    font-size: clamp(1rem, 4vw, 1.8rem);
     color: var(--light-white);
     margin-bottom: 50px;
     font-weight: 300;
     letter-spacing: 0.15em;
-    font-style: Noto Serif JP;
+    /* 修正：font-family 應該放在這裡而非單獨寫 font-style */
+    font-family: 'Noto Serif JP', serif; 
+    width: 90%;
+    line-height: 1.4;
 }
 
 .home-page .menu-container {
@@ -277,7 +280,7 @@ body {
         color: transparent;
     }
 
-    h2 {
+    .home-page h2 {
         font-size: 1.3rem;
     }
 
@@ -314,7 +317,7 @@ body {
         color: transparent;
     }
 
-    h2 {
+    .home-page h2 {
         font-size: 1.1rem;
         margin-bottom: 40px;
     }
@@ -359,6 +362,11 @@ body {
         background-clip: text;
         -webkit-background-clip: text;
         color: transparent;
+    }
+
+    .home-page h2 {
+        font-size: 1rem;
+        margin-bottom: 30px;
     }
 
     .container {
@@ -424,10 +432,10 @@ body {
 }
 
 .home-page .header-sublabel {
-    font-size: 1.2rem;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
     color: var(--light-white);
     margin-bottom: 10px;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
 }
 
 .social-links a {
@@ -482,8 +490,8 @@ body {
     align-items: center;
     z-index: 1;
     pointer-events: none;
-
-    /* --- 加入以下動畫設定 --- */
+    padding: 0 20px; /* 增加兩側緩衝，防止縮小時文字撞牆 */
+    text-align: center;
     animation: fadeInDown 1.5s ease-out forwards;
 }
 /* 標題先出現 */
