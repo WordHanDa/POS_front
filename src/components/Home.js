@@ -27,6 +27,9 @@ function Home() {
     const storyElements = document.querySelectorAll('.story');
     storyElements.forEach(el => observer.observe(el));
 
+    const conditionElement = document.querySelector('.condition');
+    if (conditionElement) observer.observe(conditionElement);
+
     return () => {
       window.removeEventListener('resize', handleResize);
       observer.disconnect();
@@ -121,21 +124,18 @@ function Home() {
               <li className="condition-text">嚴禁性騷擾，若您遇到請向工作人員打PASS<br />Sexual harassment is strictly prohibited. If you encounter it, please inform the staff by saying "PASS".<br />セクシャルハラスメントは厳禁です。遭遇した場合は、スタッフに「PASS」と伝えてください。</li>
             </ul>
           </div>
-          
+
           <div className="social-links">
             <a href="https://www.instagram.com/cgu_bartend/" target="_blank" rel="noopener noreferrer">
               <i className="fab fa-instagram"></i> cgu_bartend
             </a>
           </div>
-          
+
           <div className="warming-section">
             <p className="warming">未成年請勿飲酒<br />喝酒不開車，開車不喝酒</p>
             <p className="warming">No drinking under the age of 18.<br />Don't drink and drive.</p>
             <p className="warming">未成年者の饮酒を禁止する<br />お酒を飲んだら運転しないでください</p>
           </div>
-
-          
-
         </div>
 
         <footer className="footer">
