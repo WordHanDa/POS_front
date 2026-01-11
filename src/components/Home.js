@@ -74,7 +74,7 @@ function Home() {
 
           <div className="separator"></div>
 
-          <h2>本週菜單 MENU</h2>
+          <h3>本週菜單 MENU</h3>
 
           <div className="menu-buttons">
             <Link to="/classic" className="menu-button">
