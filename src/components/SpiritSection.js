@@ -53,7 +53,6 @@ const SpiritSection = ({ type, title, BASE_API }) => {
                     setLoading(false);
                     setIsFadingOut(false);
                     setHasLoaded(true);
-                    // 如果是剛進頁面，不要突然 smooth scroll 驚嚇使用者
                 }, 700); // 將時間從 500ms 提高到 700ms
             } else {
                 throw new Error('Data format error');
