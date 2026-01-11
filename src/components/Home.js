@@ -116,7 +116,7 @@ function Home() {
 
           <div className='Event'>
             <div className="Event-container">
-              <h3>活動資訊 Event Information</h3>
+              <h3>優惠活動 Event Information</h3>
               <p className="event-text">
                 皮炎
               </p>
