@@ -118,7 +118,11 @@ function Home() {
             <div className="Event-container">
               <h3>優惠活動 Event Information</h3>
               <p className="event-text">
-                皮炎
+                <ul>
+                  <li>活動期間：2024/10/14 - 2024/10/20</li>
+                  <li>活動內容：凡於活動期間內，至本店用皮炎喝shot整桌免單。</li>
+                  <li>注意事項：每人每日限參加一次。</li>
+                </ul>
               </p>
             </div>
           </div>
