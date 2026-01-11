@@ -105,7 +105,8 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
     }
   };
 
-  const addToCart = (item) => {
+  const addToCart = (e, item) => {
+    e.stopPropagation();
     const existingCart = Cookies.get('shopping_cart');
     let cart = existingCart ? JSON.parse(existingCart) : [];
     const idx = cart.findIndex(i => i.ITEM_ID === item.ITEM_ID);
@@ -121,6 +122,9 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
       });
     }
     Cookies.set('shopping_cart', JSON.stringify(cart), { expires: 7, path: '/' });
+    window.dispatchEvent(new CustomEvent('ADD_TO_CART_ANIMATION', {
+      detail: { originEvent: e }
+    }));
   };
 
   return (
@@ -149,7 +153,11 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
         hasLoaded && (
           <div className="menu-grid content-fade-in">
             {items.map((item) => (
-              <div className="menu-item" key={item.ITEM_ID} onClick={() => addToCart(item)}>
+              <div
+                className="menu-item"
+                key={item.ITEM_ID}
+                onClick={(e) => addToCart(e, item)} // 關鍵：一定要寫 (e) => ... 並把 e 傳進去
+              >
                 <div className="item-header">
                   <span className="item-name">{item.ITEM_NAME}</span>
                   <span className="item-price">${item.ITEM_PRICE}</span>

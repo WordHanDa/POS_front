@@ -521,3 +521,47 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
+.empty-msg {
+  text-align: center;
+  color: #a1a1a1;
+  margin-top: 50px;
+}
+/* 飛行粒子樣式 */
+.fly-particle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 110px;
+  height: 37px;
+  background: #b2966b;
+  border-radius: 10%;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(178, 150, 107, 0.8);
+  animation: flyToCart 0.8s cubic-bezier(0.1, 0.6, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes flyToCart {
+    0% {
+        /* 使用 translate3d 啟用硬件加速 */
+        transform: translate3d(var(--startX), var(--startY), 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate3d(var(--endX), var(--endY), 0) scale(0.1);
+        opacity: 0;
+    }
+}
+
+/* 強化 bump 動畫讓吸入感更強 */
+.cart-badge.bump {
+  animation: cartBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes cartBounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}

@@ -44,15 +44,17 @@ const SpiritSection = ({ type, title, BASE_API }) => {
 
             if (Array.isArray(data)) {
                 setItems(data);
-                
-                // --- 關鍵過渡邏輯 ---
-                setIsFadingOut(true); // 觸發 CSS opacity: 0
+
+                // 觸發淡出 Loading
+                setIsFadingOut(true);
+
+                // 增加延遲，確保外層 SpiritDetail 的進場動畫已經跑了一半以上
                 setTimeout(() => {
-                    setLoading(false);      // 移除加載元件
+                    setLoading(false);
                     setIsFadingOut(false);
-                    setHasLoaded(true);     // 顯示內容並觸發淡入動畫
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 500); // 對應 CSS transition 時間
+                    setHasLoaded(true);
+                    // 如果是剛進頁面，不要突然 smooth scroll 驚嚇使用者
+                }, 700); // 將時間從 500ms 提高到 700ms
             } else {
                 throw new Error('Data format error');
             }
@@ -67,7 +69,7 @@ const SpiritSection = ({ type, title, BASE_API }) => {
         fetchData();
     }, [type, fetchData]);
 
-    const addToCart = (item) => {
+    const addToCart = (e, item) => {
         const existingCart = Cookies.get('shopping_cart');
         let cart = existingCart ? JSON.parse(existingCart) : [];
         const idx = cart.findIndex(i => i.ITEM_ID === item.ITEM_ID);
@@ -84,6 +86,9 @@ const SpiritSection = ({ type, title, BASE_API }) => {
             });
         }
         Cookies.set('shopping_cart', JSON.stringify(cart), { expires: 7, path: '/' });
+        window.dispatchEvent(new CustomEvent('ADD_TO_CART_ANIMATION', {
+            detail: { originEvent: e }
+        }));
     };
 
     // 錯誤 UI
@@ -111,9 +116,9 @@ const SpiritSection = ({ type, title, BASE_API }) => {
                         <p className="no-item-text">此類別目前沒有品項</p>
                     ) : (
                         items.map((group, index) => (
-                            <div 
-                                className="spirit-card" 
-                                key={index} 
+                            <div
+                                className="spirit-card"
+                                key={index}
                                 style={{ animationDelay: `${index * 0.1}s` }} // 每個卡片間隔 0.1s 出現
                             >
                                 <div className="item-content">
@@ -136,7 +141,7 @@ const SpiritSection = ({ type, title, BASE_API }) => {
                                             <button
                                                 key={v.item_id}
                                                 className="variant-price-btn"
-                                                onClick={() => addToCart({
+                                                onClick={(e) => addToCart(e, { // 確保傳入 e
                                                     ITEM_ID: v.item_id,
                                                     ITEM_NAME: v.original_name,
                                                     ITEM_PRICE: v.price
