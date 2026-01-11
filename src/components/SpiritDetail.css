@@ -1,52 +1,10 @@
 /* --- 基酒詳情頁專屬命名空間 --- */
-body {
-    background-color: #ebe5d8; /* 使用與漸層終點一致的顏色 */
-}
-
 .spirit-detail-page {
     font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
     background: linear-gradient(135deg, #f5f1e8 0%, #ebe5d8 100%);
-    min-height: 100vh;
     padding: 40px 20px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* 避免動畫過程中出現滾動條閃爍 */
-    overflow-x: hidden;
-}
-
-.spirit-detail-page.fade-in {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* 退出動畫觸發 */
-.spirit-detail-page.page-exit {
-    opacity: 0;
-    transform: translateX(-20px);
-    transition: opacity 0.3s ease-in, transform 0.3s ease-in;
-}
-
-.detail-content-wrapper {
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.spirit-detail-page.page-exit {
-    opacity: 0;
-    transform: translateX(-15px); /* 輕微向左移動，營造「退回」的感覺 */
-}
-
-/* --- 返回按鈕的進階互動 --- */
-.spirit-detail-page .back-link-custom {
-    display: inline-block;
-    color: #8b6f47;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    cursor: pointer;
+    color: #3d3021;
+    min-height: 100vh;
 }
 
 .spirit-detail-page .detail-container {
@@ -197,16 +155,6 @@ body {
     font-weight: 500;
     font-size: 0.9rem;
     transition: color 0.3s;
-}
-.spirit-detail-page .back-link-custom:hover {
-    color: #b2966b;
-    transform: translateX(-5px); /* 滑鼠懸停時微向左移 */
-}
-
-/* 關鍵：點擊瞬間的漸隱與縮放效果 */
-.spirit-detail-page .back-link-custom:active {
-    opacity: 0.4; /* 點擊時明顯變淡 */
-    transform: scale(0.96); /* 稍微縮小，提供物理反饋感 */
 }
 
 .spirit-detail-page .variant-price-btn:hover {
