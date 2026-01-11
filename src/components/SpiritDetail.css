@@ -172,3 +172,84 @@
     .spirit-detail-page .item-image { width: 120px; height: auto; }
     .spirit-detail-page .price-box-grouped { justify-content: center; flex-wrap: wrap; }
 }
+
+/* --- Loading 動畫設定 --- */
+
+/* 文字呼吸效果：適合 "Loading..." 字樣 */
+@keyframes classicFade {
+    0%, 100% { opacity: 0.3; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-2px); }
+}
+
+/* 金色邊框旋轉：符合調酒金屬質感 */
+@keyframes goldSpin {
+    0% { transform: rotate(0deg); border-top-color: #b2966b; }
+    50% { border-top-color: #cdcdcd; }
+    100% { transform: rotate(360deg); border-top-color: #b2966b; }
+}
+
+.loading-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 0;
+    transition: opacity 0.5s ease;
+}
+
+.loading-placeholder.fade-out {
+    opacity: 0;
+}
+
+/* Loading 容器樣式 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #000000; /* 延續背景色 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loader-circle {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(178, 150, 107, 0.2);
+    border-top: 2px solid #b2966b;
+    border-radius: 50%;
+    animation: goldSpin 1.2s linear infinite;
+    margin-bottom: 20px;
+}
+
+.loading-text {
+    font-family: 'Cormorant Garamond', serif;
+    color: #b2966b;
+    letter-spacing: 4px;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    animation: classicFade 2s ease-in-out infinite;
+}
+
+@keyframes spiritFadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 讓 Spirit Card 逐個浮現的基礎樣式 */
+.spirit-card {
+    opacity: 0; /* 初始透明 */
+    animation: spiritFadeIn 0.6s ease forwards;
+}
+
+.no-item-text {
+    text-align: center;
+    margin-top: 40px;
+    color: #8b6f47;
+    font-style: italic;
+    letter-spacing: 2px;
+}

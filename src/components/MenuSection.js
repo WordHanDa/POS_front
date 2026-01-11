@@ -6,6 +6,8 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
   const [hasLoaded, setHasLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [showLoader, setShowLoader] = useState(true); // 控制元件是否存在於 DOM
+  const [isFadingOut, setIsFadingOut] = useState(false); // 控制淡出動畫 class
   const sectionRef = useRef(null);
   const abortControllerRef = useRef(null);
 
@@ -16,7 +18,7 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
       .replace(/\{br\}/g, '\n')          // 處理常見的自定義換行符
       .replace(/<br\s*\/?>/gi, '\n');    // 處理標準 HTML 換行標籤
   };
-  
+
   useEffect(() => {
     let timeoutId;
 
@@ -85,7 +87,12 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
 
       if (Array.isArray(data)) {
         setItems(data);
-        setHasLoaded(true);
+        setIsFadingOut(true);
+        setTimeout(() => {
+          setHasLoaded(true);
+          setLoading(false);
+          setIsFadingOut(false);
+        }, 500);
       } else {
         throw new Error("Invalid data structure");
       }
@@ -123,9 +130,10 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
         {title}
       </div>
 
-      {loading && (
-        <div className="loading-placeholder">
-          <p className="loading-text">Loading {title}...</p>
+      {(loading || isFadingOut) && !hasLoaded && (
+        <div className={`loading-placeholder ${isFadingOut ? 'fade-out' : ''}`}>
+          <div className="loader-circle-small"></div>
+          <p className="loading-text">Crafting {title}...</p>
         </div>
       )}
 
@@ -138,26 +146,27 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
           </button>
         </div>
       ) : (
-        <div className="menu-grid">
-          {items.map((item) => (
-            <div className="menu-item" key={item.ITEM_ID} onClick={() => addToCart(item)}>
-              <div className="item-header">
-                <span className="item-name">{item.ITEM_NAME}</span>
-                <span className="item-price">${item.ITEM_PRICE}</span>
+        hasLoaded && (
+          <div className="menu-grid content-fade-in">
+            {items.map((item) => (
+              <div className="menu-item" key={item.ITEM_ID} onClick={() => addToCart(item)}>
+                <div className="item-header">
+                  <span className="item-name">{item.ITEM_NAME}</span>
+                  <span className="item-price">${item.ITEM_PRICE}</span>
+                </div>
+                <div className="item-description" style={{ whiteSpace: 'pre-line' }}>
+                  {formatDescription(item.Description)}
+                </div>
+                <div className="add-hint">+ ADD TO CART</div>
               </div>
-              <div className="item-description" style={{ whiteSpace: 'pre-line' }}>
-                {formatDescription(item.Description)}
-              </div>
-              <div className="add-hint">+ ADD TO CART</div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )
       )}
     </div>
   );
 };
 
-// 樣式部分保持不變...
 const errorContainerStyle = { textAlign: 'center', padding: '30px', background: 'rgba(178, 150, 107, 0.05)', borderRadius: '8px', border: '1px dashed #b2966b' };
 const errorIconStyle = { fontSize: '1.5rem', marginBottom: '10px', color: '#b2966b' };
 const errorTitleStyle = { color: '#b2966b', marginBottom: '15px' };

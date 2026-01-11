@@ -11,7 +11,26 @@ function Home() {
 
     handleResize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    const observerOptions = {
+      threshold: 0.2 // 當元素出現 20% 時觸發
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible'); // 加入 visible 啟動動畫
+        }
+      });
+    }, observerOptions);
+
+    const storyElements = document.querySelectorAll('.story');
+    storyElements.forEach(el => observer.observe(el));
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      observer.disconnect();
+    };
   }, []);
 
   return (
@@ -35,21 +54,23 @@ function Home() {
             今晚屬於你的，<br />
             是哪一杯呢？
           </p>
-          <p className="story-small">
-            Cocktails are not only colorful and delicious,<br />
-            but also a silent language,<br />
-            conveying emotions and sentiments.<br /><br />
-            Like the language of flowers expressing love and longing,<br />
-            each drink holds a story.<br /><br />
-            So, which one belongs to you tonight?
-          </p>
-          <p className="story-small">
-            カクテルは色とりどりで美味しいだけでなく、<br />
-            感情や気持ちを伝える無言の言語でもあります。<br /><br />
-            愛と憧れを表現する花言葉のように、<br />
-            それぞれのドリンクには物語が込められています。<br /><br />
-            今夜、あなたにぴったりなのはどれですか？
-          </p>
+          <div className="small-story-container">
+            <p className="story">
+              Cocktails are not only colorful and delicious,<br />
+              but also a silent language,<br />
+              conveying emotions and sentiments.<br /><br />
+              Like the language of flowers expressing love and longing,<br />
+              each drink holds a story.<br /><br />
+              So, which one belongs to you tonight?
+            </p>
+            <p className="story">
+              カクテルは色とりどりで美味しいだけでなく、<br />
+              感情や気持ちを伝える無言の言語でもあります。<br /><br />
+              愛と憧れを表現する花言葉のように、<br />
+              それぞれのドリンクには物語が込められています。<br /><br />
+              今夜、あなたにぴったりなのはどれですか？
+            </p>
+          </div>
 
           <div className="separator"></div>
 
@@ -101,7 +122,7 @@ function Home() {
         </div>
 
         <footer className="footer">
-          &copy; 2025 <a href="https://www.instagram.com/cgu_bartend/" target="_blank" rel="noopener noreferrer">CGU Tender's Bar</a> | All Rights Reserved
+          &copy; 2026 <a href="https://www.instagram.com/cgu_bartend/" target="_blank" rel="noopener noreferrer">CGU Tender's Bar</a> | Designed by Y.S Chen
         </footer>
       </div>
     </div>
