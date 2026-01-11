@@ -27,6 +27,9 @@ function Home() {
     const storyElements = document.querySelectorAll('.story');
     storyElements.forEach(el => observer.observe(el));
 
+    const eventElement = document.querySelector('.Event');
+    if (eventElement) observer.observe(eventElement);
+
     const conditionElement = document.querySelector('.condition');
     if (conditionElement) observer.observe(conditionElement);
 
@@ -110,6 +113,15 @@ function Home() {
           <p className="description">Explore this week's finest cocktail creations, meticulously crafted by our professional bartenders to bring you a unique taste experience.</p>
 
           <div className="separator"></div>
+
+          <div className='Event'>
+            <div className="Event-container">
+              <h3>活動資訊 Event Information</h3>
+              <p className="event-text">
+                皮炎
+              </p>
+            </div>
+          </div>
 
           <div className='condition'>
             <div className="condition-title-container">
