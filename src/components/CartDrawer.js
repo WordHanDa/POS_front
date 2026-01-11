@@ -11,6 +11,44 @@ const CartDrawer = ({ BASE_API }) => {
     const [isConfirming, setIsConfirming] = useState(false);
     const [activeOrders, setActiveOrders] = useState([]); // 存放已送出但未結帳的訂單
     const [viewingHistory, setViewingHistory] = useState(false); // 控制歷史紀錄彈窗
+    const [flyingParticles, setFlyingParticles] = useState([]);
+
+    const triggerFlyAnimation = (e) => {
+        // 取得點擊位置
+        const startX = e.clientX;
+        const startY = e.clientY;
+
+        // 取得購物車按鈕位置 (右下角)
+        const cartButton = document.querySelector('.cart-badge');
+        const rect = cartButton.getBoundingClientRect();
+        const endX = rect.left + rect.width / 2;
+        const endY = rect.top + rect.height / 2;
+
+        const id = Date.now();
+        const newParticle = { id, startX, startY, endX, endY };
+
+        setFlyingParticles(prev => [...prev, newParticle]);
+
+        // 動畫結束後移除 (0.8s 為動畫時間)
+        setTimeout(() => {
+            setFlyingParticles(prev => prev.filter(p => p.id !== id));
+            // 動畫結束時觸發購物車震動
+            setIsBumping(true);
+            setTimeout(() => setIsBumping(false), 400);
+        }, 800);
+    };
+    // CartDrawer.js
+    useEffect(() => {
+        loadCart(); // 初始載入
+
+        // 監聽加入購物車事件，立即重新讀取 Cookie
+        const handleRefresh = () => loadCart();
+        window.addEventListener('ADD_TO_CART_ANIMATION', handleRefresh);
+
+        return () => {
+            window.removeEventListener('ADD_TO_CART_ANIMATION', handleRefresh);
+        };
+    }, []);
 
     const loadCart = () => {
         const savedCart = Cookies.get('shopping_cart');
@@ -146,6 +184,19 @@ const CartDrawer = ({ BASE_API }) => {
 
     return (
         <>
+            {/* 動畫粒子渲染 */}
+            {flyingParticles.map(p => (
+                <div
+                    key={p.id}
+                    className="fly-particle"
+                    style={{
+                        '--startX': `${p.startX}px`,
+                        '--startY': `${p.startY}px`,
+                        '--endX': `${p.endX}px`,
+                        '--endY': `${p.endY}px`
+                    }}
+                />
+            ))}
             {/* 1. 懸浮按鈕：點擊開啟側欄 */}
             <div className={`cart-badge ${isBumping ? 'bump' : ''}`} onClick={() => setIsOpen(true)}>
                 <div className="menu-icon">
@@ -245,7 +296,7 @@ const CartDrawer = ({ BASE_API }) => {
                                                     <span className="confirm-note">({item.ITEM_NOTE})</span>
                                                 )}
                                                 <div className="history-time">
-                                                    點餐時間: {new Date(item.ORDER_DATE).toLocaleTimeString('zh-TW', { timeZone: 'UTC' },[], { hour: '2-digit', minute: '2-digit' })}
+                                                    點餐時間: {new Date(item.ORDER_DATE).toLocaleTimeString('zh-TW', { timeZone: 'UTC' }, [], { hour: '2-digit', minute: '2-digit' })}
                                                 </div>
                                             </div>
                                             <div className="history-item-price">
