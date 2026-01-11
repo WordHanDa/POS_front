@@ -6,42 +6,54 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
   const [hasLoaded, setHasLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [showLoader, setShowLoader] = useState(true); // 控制元件是否存在於 DOM
+  const [isFadingOut, setIsFadingOut] = useState(false); // 控制淡出動畫 class
   const sectionRef = useRef(null);
-  const abortControllerRef = useRef(null); // 用於追蹤請求
+  const abortControllerRef = useRef(null);
+
+  const formatDescription = (text) => {
+    if (!text) return "";
+    return text
+      .replace(/\{&lt;br\/&gt;\}/g, '\n') // 處理您之前提到的奇怪格式
+      .replace(/\{br\}/g, '\n')          // 處理常見的自定義換行符
+      .replace(/<br\s*\/?>/gi, '\n');    // 處理標準 HTML 換行標籤
+  };
 
   useEffect(() => {
     let timeoutId;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // 當元素進入視窗且尚未載入時，發動錯開請求
+        // 當元素進入視窗且尚未載入時
         if (entry.isIntersecting && !hasLoaded && !loading) {
-          const staggerDelay = index * 200; // 每個區塊間隔 200ms
+          // 增加錯開時間，根據 index 排序 (0ms, 200ms, 400ms...)
+          const staggerDelay = index * 200;
 
           timeoutId = setTimeout(() => {
             fetchData();
           }, staggerDelay);
         }
       },
-      { threshold: 0.1 }
+      {
+        threshold: 0.05,
+        rootMargin: '0px 0px 100px 0px' // 提前一點點觸發
+      }
     );
 
     if (sectionRef.current) observer.observe(sectionRef.current);
 
-    // 清理函數：取消觀察並清除尚未執行的延遲請求
     return () => {
       observer.disconnect();
       if (timeoutId) clearTimeout(timeoutId);
       if (abortControllerRef.current) abortControllerRef.current.abort();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasLoaded, type, index]);
 
   const fetchWithRetry = async (url, signal, retries = 2, delay = 1000) => {
     try {
       const res = await fetch(url, { signal });
-      
       if (!res.ok) {
-        // 針對 500 以上伺服器錯誤進行重試
         if (res.status >= 500 && retries > 0) {
           await new Promise(resolve => setTimeout(resolve, delay));
           return fetchWithRetry(url, signal, retries - 1, delay * 2);
@@ -50,7 +62,7 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
       }
       return await res.json();
     } catch (err) {
-      if (err.name === 'AbortError') throw err; // 如果是手動取消，直接拋出不重試
+      if (err.name === 'AbortError') throw err;
       if (retries > 0) {
         await new Promise(resolve => setTimeout(resolve, delay));
         return fetchWithRetry(url, signal, retries - 1, delay * 2);
@@ -62,26 +74,30 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
   const fetchData = async () => {
     if (hasLoaded || loading) return;
 
-    // 初始化 AbortController
     abortControllerRef.current = new AbortController();
     setLoading(true);
     setError(false);
 
     try {
       const data = await fetchWithRetry(
-        `${BASE_API}/ITEM_BY_TYPE?type=${type}`, 
-        abortControllerRef.current.signal, 
+        `${BASE_API}/ITEM_BY_TYPE?type=${type}`,
+        abortControllerRef.current.signal,
         2
       );
 
       if (Array.isArray(data)) {
         setItems(data);
-        setHasLoaded(true);
+        setIsFadingOut(true);
+        setTimeout(() => {
+          setHasLoaded(true);
+          setLoading(false);
+          setIsFadingOut(false);
+        }, 500);
       } else {
         throw new Error("Invalid data structure");
       }
     } catch (err) {
-      if (err.name === 'AbortError') return; // 忽略取消請求產生的錯誤
+      if (err.name === 'AbortError') return;
       console.error("Final Request Failure:", err);
       setError(true);
     } finally {
@@ -108,49 +124,52 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
   };
 
   return (
-    <div className="menu-section-wrapper" ref={sectionRef} style={{ minHeight: '100px' }}>
-      <div className="section-title text-gradient">{title}</div>
+    // 重點：minHeight 改為 400px，防止頁面初始長度太短
+    <div className="menu-section-wrapper" ref={sectionRef} style={{ minHeight: '400px', marginBottom: '40px' }}>
+      <div className="section-title text-gradient" style={{ fontSize: '1.8rem', marginBottom: '20px' }}>
+        {title}
+      </div>
 
-      {loading && <p className="loading-text">Loading...</p>}
+      {(loading || isFadingOut) && !hasLoaded && (
+        <div className={`loading-placeholder ${isFadingOut ? 'fade-out' : ''}`}>
+          <div className="loader-circle-small"></div>
+          <p className="loading-text">Crafting {title}...</p>
+        </div>
+      )}
 
       {error ? (
         <div className="error-container" style={errorContainerStyle}>
           <i className="fa-solid fa-circle-exclamation" style={errorIconStyle}></i>
-          <p style={errorTitleStyle}>伺服器忙碌中，請稍後再試</p>
-          <p style={errorSubStyle}>系統已嘗試自動修復，若問題持續請點擊下方按鈕</p>
+          <p style={errorTitleStyle}>伺服器忙碌中</p>
           <button onClick={() => fetchData()} className="retry-btn" style={retryButtonStyle}>
             點擊重試
           </button>
         </div>
       ) : (
-        <div className="menu-grid">
-          {Array.isArray(items) && items.map((item) => (
-            <div className="menu-item" key={item.ITEM_ID} onClick={() => addToCart(item)}>
-              <div className="item-header">
-                <span className="item-name">{item.ITEM_NAME}</span>
-                <span className="item-price">${item.ITEM_PRICE}</span>
+        hasLoaded && (
+          <div className="menu-grid content-fade-in">
+            {items.map((item) => (
+              <div className="menu-item" key={item.ITEM_ID} onClick={() => addToCart(item)}>
+                <div className="item-header">
+                  <span className="item-name">{item.ITEM_NAME}</span>
+                  <span className="item-price">${item.ITEM_PRICE}</span>
+                </div>
+                <div className="item-description" style={{ whiteSpace: 'pre-line' }}>
+                  {formatDescription(item.Description)}
+                </div>
+                <div className="add-hint">+ ADD TO CART</div>
               </div>
-              <div className="item-description">{item.Description}</div>
-              <div className="add-hint">+ ADD TO CART</div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )
       )}
     </div>
   );
 };
 
-// 提取樣式以保持主體乾淨
-const errorContainerStyle = {
-  textAlign: 'center', padding: '40px 20px', background: 'rgba(178, 150, 107, 0.05)',
-  borderRadius: '8px', border: '1px dashed #b2966b', margin: '20px 0'
-};
-const errorIconStyle = { fontSize: '2rem', marginBottom: '15px', color: '#b2966b' };
-const errorTitleStyle = { color: '#b2966b', fontSize: '1.1rem', fontWeight: '500' };
-const errorSubStyle = { color: '#888', fontSize: '0.9rem', marginBottom: '20px' };
-const retryButtonStyle = {
-  background: '#b2966b', color: '#000', border: 'none', padding: '10px 25px',
-  borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', transition: '0.3s'
-};
+const errorContainerStyle = { textAlign: 'center', padding: '30px', background: 'rgba(178, 150, 107, 0.05)', borderRadius: '8px', border: '1px dashed #b2966b' };
+const errorIconStyle = { fontSize: '1.5rem', marginBottom: '10px', color: '#b2966b' };
+const errorTitleStyle = { color: '#b2966b', marginBottom: '15px' };
+const retryButtonStyle = { background: '#b2966b', color: '#000', border: 'none', padding: '8px 20px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' };
 
 export default MenuSection;

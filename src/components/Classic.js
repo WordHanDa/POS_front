@@ -1,10 +1,27 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react'; // 引入 useLayoutEffect
 import { Link } from 'react-router-dom';
-import MenuSection from './MenuSection'; // 引入新建立的子組件
+import MenuSection from './MenuSection';
 import './Classic.css';
 
 function Classic({ BASE_API }) {
-  // 定義所有類別
+  // 強制回到頂部
+  useLayoutEffect(() => {
+    // 1. 處理手動滾動
+    window.scrollTo(0, 0);
+    
+    // 2. 針對某些瀏覽器（如 Chrome）的自動捲動恢復機制
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    return () => {
+      // 離開頁面時恢復成自動，以免影響其他頁面
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'auto';
+      }
+    };
+  }, []);
+
   const sections = [
     { type: 'SPARKLING', title: 'SPARKLING 氣泡' },
     { type: 'CLASSIC', title: 'CLASSIC 經典' },
@@ -16,11 +33,14 @@ function Classic({ BASE_API }) {
   return (
     <div className="classic-page">
       <div className="menu-container">
-        <Link to="/" className="back-link" style={{ color: '#b2966b', textDecoration: 'none' }}>← BACK</Link>
+        <Link to="/" className="back-link" style={{ color: '#b2966b', textDecoration: 'none' }}>
+          ← BACK
+        </Link>
 
-        {sections.map((section) => (
+        {sections.map((section, idx) => (
           <MenuSection 
             key={section.type} 
+            index={idx} 
             type={section.type} 
             title={section.title} 
             BASE_API={BASE_API} 
