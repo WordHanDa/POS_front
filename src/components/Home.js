@@ -120,8 +120,8 @@ function Home() {
               <li className="condition-text">理性飲酒，嘔吐酌收清潔費2000元/人<br />Drink responsibly. A cleaning fee of NT$2000 per person will be charged for vomiting.<br />節度ある飲酒を心がけ、嘔吐した場合はお一人様2000元の清掃費がかかります。</li>
               <li className="condition-text">攜帶外食則酌收服務費2000/桌<br />A service fee of NT$2000 per table will be charged for bringing outside food.<br />外部からの飲食物の持ち込みには、テーブルごとに2000元のサービス料がかかります。</li>
               <li className="condition-text">自帶酒水則酌收開瓶費500/瓶<br />A corkage fee of NT$500 per bottle will be charged for bringing your own alcohol.<br />持ち込みの酒類には、ボトルごとに500元のコルケージ料がかかります。</li>
-              <li className="condition-text">全店禁止吸菸<br />Smoking is prohibited throughout the venue.<br />店内は全面禁煙です。</li>
               <li className="condition-text">嚴禁性騷擾，若您遇到請向工作人員打PASS<br />Sexual harassment is strictly prohibited. If you encounter it, please inform the staff by saying "PASS".<br />セクシャルハラスメントは厳禁です。遭遇した場合は、スタッフに「PASS」と伝えてください。</li>
+              <li className="condition-text">全店禁止吸菸<br />Smoking is prohibited throughout the venue.<br />店内は全面禁煙です。</li>
             </ul>
           </div>
 

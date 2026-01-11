@@ -520,7 +520,7 @@ h3 {
     opacity: 0;
     transform: translateY(30px);
     border: #b16565 1px solid;
-    background: linear-gradient(180deg, #0c0b0a 100%, var(--dark-gray) 0%);;
+    background: linear-gradient(180deg, var(--dark-gray) 0%, #2a251d 100%);
     padding: 20px;
     margin-top: 50px;
     text-align: left;
