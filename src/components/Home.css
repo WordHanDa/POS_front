@@ -39,6 +39,14 @@ body {
     z-index: -1;
 }
 
+.home-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* 確保沒有預設間距 */
+    gap: 0;
+}
+
 .home-page.container {
     max-width: 1200px;
     margin: 0 auto;
@@ -238,8 +246,9 @@ body {
 
 .footer {
     background-color: var(--black);
-    padding: 20px;
-    margin-top: auto;
+    padding: 30px 20px;
+    /* 修正：移除 margin-top: auto，確保緊貼上方容器 */
+    margin-top: 0; 
     font-size: 1rem;
     color: var(--light-gray);
     letter-spacing: 0.1em;
@@ -413,15 +422,13 @@ body {
 .scrolling-content {
     position: relative;
     z-index: 2;
-    width: 100vw;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
+    /* 修正：移除會導致寬螢幕跑版的負 margin */
+    width: 100%; 
     background-color: #0c0b0a;
     background: linear-gradient(180deg, #0c0b0a 0%, var(--dark-gray) 100%);
     margin-top: calc(var(--vh, 1vh) * 100);
     padding-top: 60px;
+    margin-bottom: 0; /* 確保底部不留白 */
 }
 
 .menu-icon i,
@@ -574,29 +581,25 @@ ul {
 }
 
 .Event th {
-    padding: 10px 0;
-    text-align: center;
+    padding: 12px 0;
+    text-align: left; /* 改回靠左，與規約標題一致 */
     font-size: clamp(0.9rem, 2.5vw, 1rem);
     color: var(--dark-gray);
-    line-height: 1.8;
-    letter-spacing: 0.05em;
     border-bottom: var(--dark-gray) 1px solid;
-    width: 20%;
+    width: 100px; /* 固定寬度防止縮放時標題換行 */
 }
 
 .Event td {
-    padding: 15px 15px;
-    text-align: left;
-    font-size: clamp(0.9rem, 2.5vw, 1rem);
-    color: var(--dark-gray);
-    line-height: 1.8;
-    letter-spacing: 0.05em;
+    padding: 12px 0 12px 10px;
     border-bottom: var(--white) 1px solid;
+    width: auto;
 }
 
 .Event table {
     width: 100%;
     border-collapse: collapse;
+    /* 修正寬螢幕下 th 與 td 的比例 */
+    table-layout: fixed;
 }
 
 .condition.visible {
@@ -643,9 +646,9 @@ ul {
 .Event, .condition {
     opacity: 0;
     transform: translateY(30px);
-    max-width: 720px; /* 保持最大寬度一致 */
-    width: 90%;       /* 統一寬度比例，確保手機版兩側留白一致 */
-    margin: 0 auto 50px; /* 統一水平置中與下邊距 */
+    max-width: 720px;
+    width: 90%;
+    margin: 0 auto 40px; /* 統一間距 */
     text-align: left;
 }
 
@@ -711,6 +714,8 @@ ul {
 .small-container {
     background: var(--white);
     padding-top: 80px;
+    padding-bottom: 60px; /* 這裡控制內容與 Footer 的呼吸空間 */
+    width: 100%;
 }
 
 .hint {
@@ -719,4 +724,7 @@ ul {
     color: var(--dark-gray);
     letter-spacing: 0.1em;
     max-width: 600px;
+}
+.small-container > div:last-child {
+    margin-bottom: 0;
 }
