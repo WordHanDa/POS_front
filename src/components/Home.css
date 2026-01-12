@@ -6,6 +6,8 @@
     --light-gray: rgba(192, 192, 192, 0.85);
     --light-white: rgba(255, 255, 255, 0.9);
     --dark-white: rgba(255, 255, 255, 0.7);
+    --lighter-white: rgb(239, 236, 231);
+    --white: #ffffff;
 }
 
 * {
@@ -79,11 +81,11 @@ body {
 .home-page .menu-container {
     display: flex;
     flex-direction: column;
-    gap: 60px;
     margin: 50px 0;
 }
 
 .home-page .menu-buttons {
+    margin-top: 30px;
     display: flex;
     justify-content: center;
     gap: 50px;
@@ -154,11 +156,13 @@ body {
     word-wrap: keep-all;
     opacity: 0;
     transform: translateX(-20px);
-    transition: none; 
+    transition: none;
 }
+
 .story.visible {
     animation: fadeInLeft 1.2s ease-out forwards;
 }
+
 .story:nth-child(1) {
     animation-delay: 0s;
 }
@@ -175,13 +179,24 @@ body {
     font-size: 1rem;
 }
 
+.warming-section {
+    padding-bottom: 30px; /* 增加底部空間 */
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    /* 關鍵：讓內容在 Cross Axis 置中 */
+    justify-content: center;
+    width: 100%;
+}
+
 .warming {
     font-size: 0.9rem;
-    color: var(--light-white);
-    margin: 20px auto;
+    color: var(--dark-gray);
     max-width: 600px;
     line-height: 1.6;
     letter-spacing: 0.1em;
+    text-align: center; /* 確保文字本身也是置中 */
+    margin-bottom: 15px;
 }
 
 .separator {
@@ -203,6 +218,7 @@ body {
 }
 
 .social-links {
+    text-align: center;
     margin: 40px 0;
     text-decoration: none;
 }
@@ -257,7 +273,7 @@ body {
 /* Improved Responsive Design */
 @media (max-width: 1024px) {
     .container {
-        padding: 50px 20px;
+        padding: 50px 0px;
     }
 
     .menu-icon {
@@ -294,7 +310,7 @@ body {
     }
 
     .container {
-        padding: 40px 20px;
+        padding: 40px 0px;
     }
 
     .description {
@@ -369,7 +385,7 @@ body {
     }
 
     .container {
-        padding: 30px 15px;
+        padding: 30px 0px;
     }
 
     .menu-icon {
@@ -402,13 +418,8 @@ body {
     right: 50%;
     margin-left: -50vw;
     margin-right: -50vw;
-
     background-color: #0c0b0a;
-    /* 務必使用實色 */
     background: linear-gradient(180deg, #0c0b0a 0%, var(--dark-gray) 100%);
-
-    margin-top: 100vh;
-    margin-bottom: -5cm;
     margin-top: calc(var(--vh, 1vh) * 100);
     padding-top: 60px;
 }
@@ -456,6 +467,7 @@ body {
         opacity: 0;
         transform: translateX(-20px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -467,11 +479,14 @@ body {
 @keyframes fadeInDown {
     from {
         opacity: 0;
-        transform: translateY(-30px); /* 從上方 30px 開始 */
+        transform: translateY(-30px);
+        /* 從上方 30px 開始 */
     }
+
     to {
         opacity: 1;
-        transform: translateY(0);    /* 回到原位 */
+        transform: translateY(0);
+        /* 回到原位 */
     }
 }
 
@@ -493,6 +508,7 @@ body {
     /* --- 加入以下動畫設定 --- */
     animation: fadeInDown 1.5s ease-out forwards;
 }
+
 /* 標題先出現 */
 .home-page .header-content h1 {
     animation: fadeInDown 1.2s ease-out 0.2s both;
@@ -506,6 +522,11 @@ body {
 /* 英文活動標題最後 */
 .home-page .header-content h2 {
     animation: fadeInDown 1.2s ease-out 0.8s both;
+
+
+
+
+
 }
 
 h3 {
@@ -527,25 +548,47 @@ h3 {
     max-width: 720px;
     margin:auto;
     margin-bottom: 30px;
+
+    font-weight: 300;
+    letter-spacing: 0.15em;
+}
+
+.small-container h3 {
+    color: var(--black);
+
 }
 
 .condition-title-container {
     display: flex;
     flex-direction: row;
     margin-bottom: 20px;
+
     border-bottom: 1px solid var(--gold);
+
+    border-bottom: 1px solid #d14242;
+
     align-items: baseline;
 }
 
 .condition-title {
+
     font-size: clamp(1.5rem, 5vw, 2rem);;
     color: var(--gold);
+
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    ;
+    color: #b26b6b;
+
     letter-spacing: 0.2em;
 }
 
 .condition-subtitle {
     font-size: clamp(0.9rem, 3vw, 1.2rem);
+
     color: var(--gold);
+
+    color: #b26b6b;
+
     margin-bottom: 15px;
     letter-spacing: 0.15em;
     display: inline-flexbox;
@@ -553,7 +596,11 @@ h3 {
 
 .condition-text {
     font-size: clamp(0.9rem, 2.5vw, 1rem);
+
     color: var(--light-white);
+
+    color: var(--dark-gray);
+
     line-height: 1.6;
     letter-spacing: 0.1em;
     max-width: 600px;
@@ -565,6 +612,35 @@ ul {
     padding-left: 20px;
 }
 
+
+
+.Event th {
+    padding: 10px 0;
+    text-align: center;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    color: var(--dark-gray);
+    line-height: 1.8;
+    letter-spacing: 0.05em;
+    border-bottom: var(--dark-gray) 1px solid;
+    width: 20%;
+}
+
+.Event td {
+    padding: 15px 15px;
+    text-align: left;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    color: var(--dark-gray);
+    line-height: 1.8;
+    letter-spacing: 0.05em;
+    border-bottom: var(--white) 1px solid;
+}
+
+.Event table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+
 .condition.visible {
     animation: fadeInUp 1.2s ease-out forwards;
 }
@@ -574,22 +650,49 @@ ul {
     animation: fadeInUp 0.8s ease-out forwards;
 }
 
+
 .condition.visible li:nth-child(1) { animation-delay: 0.2s; }
 .condition.visible li:nth-child(2) { animation-delay: 0.4s; }
 .condition.visible li:nth-child(3) { animation-delay: 0.6s; }
 .condition.visible li:nth-child(4) { animation-delay: 0.8s; }
 .condition.visible li:nth-child(5) { animation-delay: 1.0s; }
 
+.condition.visible li:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.condition.visible li:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.condition.visible li:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+.condition.visible li:nth-child(4) {
+    animation-delay: 0.8s;
+}
+
+.condition.visible li:nth-child(5) {
+    animation-delay: 1.0s;
+}
+
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
         transform: translateY(30px);
     }
+
+
+
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
+
 
 .Event {
     opacity: 0;
@@ -600,6 +703,23 @@ ul {
     text-align: left;
     max-width: 720px;
     margin: 40px auto 30px; /* 統一間距 */
+}
+
+.Event, .condition {
+    opacity: 0;
+    transform: translateY(30px);
+    max-width: 720px; /* 保持最大寬度一致 */
+    width: 90%;       /* 統一寬度比例，確保手機版兩側留白一致 */
+    margin: 0 auto 50px; /* 統一水平置中與下邊距 */
+    text-align: left;
+}
+
+.Event-container, .condition-container {
+    width: 100%;       /* 填滿父層 (.Event 或 .condition) */
+    background: var(--lighter-white);
+    padding: 30px 20px; /* 統一內距，讓視覺邊界一致 */
+    box-sizing: border-box;
+
 }
 
 .Event.visible {
@@ -613,12 +733,65 @@ ul {
 
 .event-text {
     font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+
     color: var(--light-white);
+
+    color: var(--dark-gray);
+
     line-height: 1.8;
     letter-spacing: 0.05em;
     margin-bottom: 10px;
 }
 
+
 .Event.visible li:nth-child(1) { animation-delay: 0.3s; }
 .Event.visible li:nth-child(2) { animation-delay: 0.5s; }
 .Event.visible li:nth-child(3) { animation-delay: 0.7s; }
+
+.event-text p {
+    color: var(--black);
+}
+
+.Event.visible li:nth-child(1) {
+    animation-delay: 0.3s;
+}
+
+.Event.visible li:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.Event.visible li:nth-child(3) {
+    animation-delay: 0.7s;
+}
+
+.Event h3 {
+    color: var(--black);
+    text-align: left;
+    margin-left: 20px;
+}
+
+.Event .event-subtitle{
+    font-size: clamp(0.7rem, 3vw, 1rem);
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    display: inline-flexbox;
+}
+
+.Event .event-title-container{
+    display: block;
+    align-items: baseline;
+    transform: translateY(12px);
+}
+
+.small-container {
+    background: var(--white);
+    padding-top: 80px;
+}
+
+.hint {
+    padding-top: 20px;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    color: var(--dark-gray);
+    letter-spacing: 0.1em;
+    max-width: 600px;
+}
