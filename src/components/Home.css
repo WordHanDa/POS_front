@@ -43,14 +43,13 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    /* 確保沒有預設間距 */
-    gap: 0;
+    gap: 0; /* Remove any potential flex gap */
 }
 
 .home-page.container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 20px 0; /* Force bottom padding to 0 */
     position: relative;
 }
 
@@ -247,12 +246,12 @@ body {
 .footer {
     background-color: var(--black);
     padding: 30px 20px;
-    /* 修正：移除 margin-top: auto，確保緊貼上方容器 */
-    margin-top: 0; 
+    margin-top: 0 !important; /* Force footer to touch the container */
     font-size: 1rem;
     color: var(--light-gray);
     letter-spacing: 0.1em;
     width: 100%;
+    position: relative;
     z-index: 1;
 }
 
@@ -292,6 +291,9 @@ body {
 }
 
 @media (max-width: 768px) {
+    .small-container {
+        transform: translateY(60px);
+    }
     .home-page h1 {
         font-size: 2.5rem;
         margin-bottom: 20px;
@@ -374,7 +376,6 @@ body {
     }
 }
 
-/* Fix for extremely small screens */
 @media (max-width: 320px) {
     .home-page h1 {
         font-size: 1.5rem;
@@ -714,8 +715,6 @@ ul {
 .small-container {
     background: var(--white);
     padding-top: 80px;
-    padding-bottom: 60px; /* 這裡控制內容與 Footer 的呼吸空間 */
-    width: 100%;
 }
 
 .hint {
@@ -725,6 +724,7 @@ ul {
     letter-spacing: 0.1em;
     max-width: 600px;
 }
+
 .small-container > div:last-child {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
 }
