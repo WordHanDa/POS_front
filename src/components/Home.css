@@ -522,73 +522,38 @@ body {
 /* 英文活動標題最後 */
 .home-page .header-content h2 {
     animation: fadeInDown 1.2s ease-out 0.8s both;
-
-
-
-
-
 }
 
 h3 {
     text-align: center;
     font-size: 1.5rem;
     color: var(--light-white);
-    margin-bottom: 30px;
-    font-weight: 300;
-    letter-spacing: 0.15em;
-}
-.condition {
-    opacity: 0;
-    transform: translateY(30px);
-    border: #b16565 1px solid;
-    background: linear-gradient(180deg, var(--dark-gray) 0%, #2a251d 100%);
-    padding: 20px;
-    margin-top: 50px;
-    text-align: left;
-    max-width: 720px;
-    margin:auto;
-    margin-bottom: 30px;
-
     font-weight: 300;
     letter-spacing: 0.15em;
 }
 
 .small-container h3 {
     color: var(--black);
-
 }
 
 .condition-title-container {
     display: flex;
     flex-direction: row;
     margin-bottom: 20px;
-
-    border-bottom: 1px solid var(--gold);
-
     border-bottom: 1px solid #d14242;
-
     align-items: baseline;
 }
 
 .condition-title {
-
-    font-size: clamp(1.5rem, 5vw, 2rem);;
-    color: var(--gold);
-
     font-size: clamp(1.5rem, 5vw, 2rem);
     ;
     color: #b26b6b;
-
     letter-spacing: 0.2em;
 }
 
 .condition-subtitle {
     font-size: clamp(0.9rem, 3vw, 1.2rem);
-
-    color: var(--gold);
-
     color: #b26b6b;
-
     margin-bottom: 15px;
     letter-spacing: 0.15em;
     display: inline-flexbox;
@@ -596,11 +561,7 @@ h3 {
 
 .condition-text {
     font-size: clamp(0.9rem, 2.5vw, 1rem);
-
-    color: var(--light-white);
-
     color: var(--dark-gray);
-
     line-height: 1.6;
     letter-spacing: 0.1em;
     max-width: 600px;
@@ -611,8 +572,6 @@ ul {
     list-style-type: disc;
     padding-left: 20px;
 }
-
-
 
 .Event th {
     padding: 10px 0;
@@ -640,7 +599,6 @@ ul {
     border-collapse: collapse;
 }
 
-
 .condition.visible {
     animation: fadeInUp 1.2s ease-out forwards;
 }
@@ -649,13 +607,6 @@ ul {
     opacity: 0;
     animation: fadeInUp 0.8s ease-out forwards;
 }
-
-
-.condition.visible li:nth-child(1) { animation-delay: 0.2s; }
-.condition.visible li:nth-child(2) { animation-delay: 0.4s; }
-.condition.visible li:nth-child(3) { animation-delay: 0.6s; }
-.condition.visible li:nth-child(4) { animation-delay: 0.8s; }
-.condition.visible li:nth-child(5) { animation-delay: 1.0s; }
 
 .condition.visible li:nth-child(1) {
     animation-delay: 0.2s;
@@ -677,32 +628,16 @@ ul {
     animation-delay: 1.0s;
 }
 
-
 @keyframes fadeInUp {
     from {
         opacity: 0;
         transform: translateY(30px);
     }
 
-
-
-
     to {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-
-.Event {
-    opacity: 0;
-    transform: translateY(30px);
-    border: var(--gold) 1px solid;
-    padding: 20px;
-    margin-top: 50px;
-    text-align: left;
-    max-width: 720px;
-    margin: 40px auto 30px; /* 統一間距 */
 }
 
 .Event, .condition {
@@ -719,7 +654,6 @@ ul {
     background: var(--lighter-white);
     padding: 30px 20px; /* 統一內距，讓視覺邊界一致 */
     box-sizing: border-box;
-
 }
 
 .Event.visible {
@@ -733,20 +667,11 @@ ul {
 
 .event-text {
     font-size: clamp(0.95rem, 2.5vw, 1.1rem);
-
-    color: var(--light-white);
-
     color: var(--dark-gray);
-
     line-height: 1.8;
     letter-spacing: 0.05em;
     margin-bottom: 10px;
 }
-
-
-.Event.visible li:nth-child(1) { animation-delay: 0.3s; }
-.Event.visible li:nth-child(2) { animation-delay: 0.5s; }
-.Event.visible li:nth-child(3) { animation-delay: 0.7s; }
 
 .event-text p {
     color: var(--black);

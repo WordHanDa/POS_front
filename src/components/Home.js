@@ -119,7 +119,7 @@ function Home() {
                 <h3>今日特別優惠</h3>
               </div>
               <div className="Event-container">
-                <p className='event-text'>【 活動說明 】</p>
+                <p className='event-text'>【活動說明】</p>
                 <table>
                   <tbody>
                     <tr>
@@ -140,80 +140,39 @@ function Home() {
               </div>
             </div>
 
-
-            <div className='Event'>
-              <div className="Event-container">
-                <h3>優惠活動 Event Information</h3>
-                <p className="event-text">
-                  <ul>
-                    <li className='event-text'>活動期間：2024/10/14 - 2024/10/20</li>
-                    <li className='event-text'>活動內容：哈哈皮炎</li>
-                    <li className='event-text'>注意事項：每人每日限參加一次。</li>
-                  </ul>
-                </p>
-              </div>
-            </div>
-
             <div className='condition'>
-              <div className="condition-title-container">
-                <p className="condition-title">社團規約 </p>
-                <p className="condition-subtitle">Club Regulations</p>
-              </div>
-              <ul>
-                <li className="condition-text">理性飲酒，嘔吐酌收清潔費 $2000元/人<br />Drink responsibly. A cleaning fee of NT$2000 per person will be charged for vomiting.<br />節度ある飲酒を心がけ、嘔吐した場合はお一人様2000元の清掃費がかかります。</li>
-                <li className="condition-text">攜帶外食則酌收服務費 $2000/桌<br />A service fee of NT$2000 per table will be charged for bringing outside food.<br />外部からの飲食物の持ち込みには、テーブルごとに2000元のサービス料がかかります。</li>
-                <li className="condition-text">自帶酒水則酌收開瓶費 $500/瓶<br />A corkage fee of NT$500 per bottle will be charged for bringing your own alcohol.<br />持ち込みの酒類には、ボトルごとに500元のコルケージ料がかかります。</li>
-                <li className="condition-text">嚴禁性騷擾，若您遇到請向工作人員打PASS<br />Sexual harassment is strictly prohibited. If you encounter it, please inform the staff by saying "PASS".<br />セクシャルハラスメントは厳禁です。遭遇した場合は、スタッフに「PASS」と伝えてください。</li>
-                <li className="condition-text">全店禁止吸菸<br />Smoking is prohibited throughout the venue.<br />店内は全面禁煙です。</li>
-              </ul>
-            </div>
-
-            <div className="social-links">
-              <a href="https://www.instagram.com/cgu_bartend/" target="_blank" rel="noopener noreferrer">
-                <i className="fab fa-instagram"></i> cgu_bartend
-              </a>
-            </div>
-
-            <div className="warming-section">
-              <p className="warming">未成年請勿飲酒<br />喝酒不開車，開車不喝酒</p>
-              <p className="warming">No drinking under the age of 18.<br />Don't drink and drive.</p>
-              <p className="warming">未成年者の饮酒を禁止する<br />お酒を飲んだら運転しないでください</p>
-
-              <div className='condition'>
-                <div className='condition-container'>
-                  <div className="condition-title-container">
-                    <p className="condition-title">社團規約 </p>
-                    <p className="condition-subtitle">Club Regulations</p>
-                  </div>
-                  <ul>
-                    <li className="condition-text">理性飲酒，嘔吐酌收清潔費 $2000元/人<br />Drink responsibly. A cleaning fee of NT$2000 per person will be charged for vomiting.<br />節度ある飲酒を心がけ、嘔吐した場合はお一人様2000元の清掃費がかかります。</li>
-                    <li className="condition-text">攜帶外食則酌收服務費 $2000/桌<br />A service fee of NT$2000 per table will be charged for bringing outside food.<br />外部からの飲食物の持ち込みには、テーブルごとに2000元のサービス料がかかります。</li>
-                    <li className="condition-text">自帶酒水則酌收開瓶費 $500/瓶<br />A corkage fee of NT$500 per bottle will be charged for bringing your own alcohol.<br />持ち込みの酒類には、ボトルごとに500元のコルケージ料がかかります。</li>
-                    <li className="condition-text">嚴禁性騷擾，若您遇到請向工作人員打PASS<br />Sexual harassment is strictly prohibited. If you encounter it, please inform the staff by saying "PASS".<br />セクシャルハラスメントは厳禁です。遭遇した場合は、スタッフに「PASS」と伝えてください。</li>
-                    <li className="condition-text">全店禁止吸菸<br />Smoking is prohibited throughout the venue.<br />店内は全面禁煙です。</li>
-                  </ul>
+              <div className='condition-container'>
+                <div className="condition-title-container">
+                  <p className="condition-title">社團規約 </p>
+                  <p className="condition-subtitle">Club Regulations</p>
                 </div>
-
-                <div className="social-links">
-                  <a href="https://www.instagram.com/cgu_bartend/" target="_blank" rel="noopener noreferrer">
-                    <i className="fab fa-instagram"></i> cgu_bartend
-                  </a>
-                </div>
-
-                <div className="warming-section">
-                  <p className="warming">未成年請勿飲酒<br />喝酒不開車，開車不喝酒</p>
-                  <p className="warming">No drinking under the age of 18.<br />Don't drink and drive.</p>
-                  <p className="warming">未成年者の饮酒を禁止する<br />お酒を飲んだら運転しないでください</p>
-                </div>
+                <ul>
+                  <li className="condition-text">理性飲酒，嘔吐酌收清潔費 $2000元/人<br />Drink responsibly. A cleaning fee of NT$2000 per person will be charged for vomiting.<br />節度ある飲酒を心がけ、嘔吐した場合はお一人様2000元の清掃費がかかります。</li>
+                  <li className="condition-text">攜帶外食則酌收服務費 $2000/桌<br />A service fee of NT$2000 per table will be charged for bringing outside food.<br />外部からの飲食物の持ち込みには、テーブルごとに2000元のサービス料がかかります。</li>
+                  <li className="condition-text">自帶酒水則酌收開瓶費 $500/瓶<br />A corkage fee of NT$500 per bottle will be charged for bringing your own alcohol.<br />持ち込みの酒類には、ボトルごとに500元のコルケージ料がかかります。</li>
+                  <li className="condition-text">嚴禁性騷擾，若您遇到請向工作人員打PASS<br />Sexual harassment is strictly prohibited. If you encounter it, please inform the staff by saying "PASS".<br />セクシャルハラスメントは厳禁です。遭遇した場合は、スタッフに「PASS」と伝えてください。</li>
+                  <li className="condition-text">全店禁止吸菸<br />Smoking is prohibited throughout the venue.<br />店内は全面禁煙です。</li>
+                </ul>
               </div>
 
+              <div className="social-links">
+                <a href="https://www.instagram.com/cgu_bartend/" target="_blank" rel="noopener noreferrer">
+                  <i className="fab fa-instagram"></i> cgu_bartend
+                </a>
+              </div>
+
+              <div className="warming-section">
+                <p className="warming">未成年請勿飲酒<br />喝酒不開車，開車不喝酒</p>
+                <p className="warming">No drinking under the age of 18.<br />Don't drink and drive.</p>
+                <p className="warming">未成年者の饮酒を禁止する<br />お酒を飲んだら運転しないでください</p>
+              </div>
             </div>
           </div>
-
-          <footer className="footer">
-            &copy; 2026 <a href="https://www.instagram.com/cgu_bartend/" target="_blank" rel="noopener noreferrer">CGU Tender's Bar</a> | Designed by Y.S Chen
-          </footer>
         </div>
+
+        <footer className="footer">
+          &copy; 2026 <a href="https://www.instagram.com/cgu_bartend/" target="_blank" rel="noopener noreferrer">CGU Tender's Bar</a> | Designed by Y.S Chen
+        </footer>
       </div>
     </div>
   );
