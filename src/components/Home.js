@@ -120,7 +120,7 @@ function Home() {
               <p className="event-text">
                 <ul>
                   <li className='event-text'>活動期間：2024/10/14 - 2024/10/20</li>
-                  <li className='event-text'>活動內容：凡於活動期間內，至本店用皮炎喝shot整桌免單。</li>
+                  <li className='event-text'>活動內容：哈哈皮炎</li>
                   <li className='event-text'>注意事項：每人每日限參加一次。</li>
                 </ul>
               </p>
