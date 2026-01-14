@@ -108,6 +108,7 @@ function Home() {
             </Link>
           </div>
 
+          <div className="separator"></div>
 
           <p className="description">探索本週最精緻的調酒作品，由我們專業的調酒師精心調製，為您帶來獨特的味覺體驗。</p>
           <p className="description">Explore this week's finest cocktail creations, meticulously crafted by our professional bartenders to bring you a unique taste experience.</p>
