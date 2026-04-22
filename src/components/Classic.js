@@ -36,7 +36,7 @@ function Classic({ BASE_API }) {
         <Link to="/" className="back-link" style={{ color: '#b2966b', textDecoration: 'none' }}>
           ← BACK
         </Link>
-
+        <div>其他經典品相請另外詢問</div> {/* 占位用於左右對齊 */}
         {sections.map((section, idx) => (
           <MenuSection 
             key={section.type} 
