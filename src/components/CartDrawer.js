@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Cookies from 'js-cookie';
 import './Cart.css';
 
@@ -48,12 +48,8 @@ const CartDrawer = ({ BASE_API }) => {
         };
         window.addEventListener('ADD_TO_CART_ANIMATION', handleAddEvent);
 
-        if (isOpen || viewingHistory) {
-            fetchActiveOrders();
-        }
-
         return () => window.removeEventListener('ADD_TO_CART_ANIMATION', handleAddEvent);
-    }, [isOpen, viewingHistory]);
+    }, []);
 
     const loadCart = () => {
         const savedCart = Cookies.get('shopping_cart');
@@ -66,8 +62,8 @@ const CartDrawer = ({ BASE_API }) => {
         }
     };
 
-    // 在 CartDrawer.js 內修改 fetchActiveOrders 函式
-    const fetchActiveOrders = async () => {
+    // 將 fetchActiveOrders 包裝成 useCallback 以便在 effect 中安全使用
+    const fetchActiveOrders = useCallback(async () => {
         const seatId = Cookies.get('customer_seat_id');
         if (!seatId) return;
         try {
@@ -79,7 +75,7 @@ const CartDrawer = ({ BASE_API }) => {
         } catch (error) {
             console.error("無法獲取進行中訂單:", error);
         }
-    };
+    }, [BASE_API]);
 
     useEffect(() => {
         loadCart();
@@ -89,7 +85,7 @@ const CartDrawer = ({ BASE_API }) => {
         }
         const interval = setInterval(loadCart, 1000);
         return () => clearInterval(interval);
-    }, [isOpen, viewingHistory]);
+    }, [isOpen, viewingHistory, fetchActiveOrders]);
 
     // 新增：處理備註更動
     const updateNote = (itemId, noteValue) => {

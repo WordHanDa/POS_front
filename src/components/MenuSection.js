@@ -6,7 +6,6 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
   const [hasLoaded, setHasLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [showLoader, setShowLoader] = useState(true); // 控制元件是否存在於 DOM
   const [isFadingOut, setIsFadingOut] = useState(false); // 控制淡出動畫 class
   const sectionRef = useRef(null);
   const abortControllerRef = useRef(null);
