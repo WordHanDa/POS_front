@@ -37,30 +37,22 @@ function Home({ BASE_API }) {
     if (conditionElement) observer.observe(conditionElement);
 
     const fetchLatestEvent = async () => {
-      try {
-        // 先確保 API_BASE 有值
-        const url = `${BASE_API}/EVENT`;
-        const response = await fetch(url);
-        
-        // 1. 檢查原始回傳內容
-        const text = await response.text(); 
-        
-        // 2. 嘗試解析
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch (e) {
-          console.error("伺服器回傳內容不是有效的 JSON:", text);
-          return;
-        }
+  try {
+    // 使用傳入的 BASE_API，確保路徑正確
+    const url = `${BASE_API}/EVENT`;
+    const response = await fetch(url);
+    
+    if (!response.ok) throw new Error("網路請求失敗");
 
-        if (response.ok && data && data.length > 0) {
-          setLatestEvent(data[data.length - 1]);
-        }
-      } catch (err) {
-        console.error("讀取失敗:", err);
-      }
-    };
+    const data = await response.json();
+    if (data && data.length > 0) {
+      // 確保陣列有資料才取用
+      setLatestEvent(data[data.length - 1]);
+    }
+  } catch (err) {
+    console.error("無法取得最新活動:", err);
+  }
+};
 
     fetchLatestEvent();
     console.log("正在請求的完整路徑:", `${BASE_API}/EVENT`);
