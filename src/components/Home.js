@@ -38,15 +38,27 @@ function Home() {
 
     const fetchLatestEvent = async () => {
       try {
-        // 假設後端有一個 API 可以取得所有事件，我們再從中取出最後一筆
-        const response = await fetch(`${process.env.REACT_APP_API_BASE}/EVENT`); 
-        const data = await response.json();
-        if (data && data.length > 0) {
-          // 假設陣列最後一筆為最新 (或依據 EVENT_ID 排序)
+        // 先確保 API_BASE 有值
+        const url = `${process.env.REACT_APP_API_BASE}/EVENT`;
+        const response = await fetch(url);
+        
+        // 1. 檢查原始回傳內容
+        const text = await response.text(); 
+        
+        // 2. 嘗試解析
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          console.error("伺服器回傳內容不是有效的 JSON:", text);
+          return;
+        }
+
+        if (response.ok && data && data.length > 0) {
           setLatestEvent(data[data.length - 1]);
         }
       } catch (err) {
-        console.error("無法取得最新活動:", err);
+        console.error("讀取失敗:", err);
       }
     };
 
