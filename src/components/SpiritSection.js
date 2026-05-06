@@ -39,7 +39,7 @@ const SpiritSection = ({ type, title, BASE_API }) => {
 
         try {
             const apiType = type.toUpperCase();
-            const apiUrl = `${BASE_API}/ITEM_GROUPED?type=${apiType}`;
+            const apiUrl = `${BASE_API}/ITEM_GROUPED?type=${apiType}&is_active=1`;
             const data = await fetchWithRetry(apiUrl);
 
             if (Array.isArray(data)) {

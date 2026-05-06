@@ -79,7 +79,7 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
 
     try {
       const data = await fetchWithRetry(
-        `${BASE_API}/ITEM_BY_TYPE?type=${type}`,
+        `${BASE_API}/ITEM_BY_TYPE?type=${type}&is_active=1`,
         abortControllerRef.current.signal,
         2
       );
