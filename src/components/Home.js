@@ -5,14 +5,18 @@ import './Home.css';
 function Home({ BASE_API }) {
 
   const formatDate = (dateString) => {
-    if (!dateString) return '';
-    if (dateString.includes('T')) {
-      const datePart = dateString.split('T')[0];
-      const [year, month, day] = datePart.split('-');
-      return `${year}/${month}/${day}`;
-    }
-    return dateString;
-  };
+  if (!dateString) return '';
+  
+  // 1. 強制只取日期部分，避開 'T' 之後的時區與時間
+  // ISO 格式: 2026-05-06T00:00:00.000Z -> split('T')[0] -> 2026-05-06
+  const datePart = dateString.split('T')[0]; 
+  
+  // 2. 切割字串為 年-月-日
+  const [year, month, day] = datePart.split('-');
+  
+  // 3. 回傳 YYYY/MM/DD
+  return `${year}/${month}/${day}`;
+};
     const fetchWithRetry = async (url, retries = 3) => {
       for (let i = 0; i < retries; i++) {
         try {
