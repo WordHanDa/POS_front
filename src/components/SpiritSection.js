@@ -11,7 +11,7 @@ const SpiritSection = ({ type, title, BASE_API }) => {
     const isItemActive = (item) => {
         if (!item) return false;
         // 若未明確指定 is_active，則當作可上架品項
-        if (item.is_active === undefined || item.is_active === null) return true;
+        //if (item.is_active === undefined || item.is_active === null) return true;
         return item.is_active === 1 || item.is_active === true || item.is_active === '1' || item.is_active === 'true';
     };
 
