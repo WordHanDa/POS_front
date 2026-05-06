@@ -4,9 +4,7 @@ import './Home.css';
 
 function Home({ BASE_API }) {
 
-  const fetchLatestEvent = async () => {
-
-    const formatDate = (dateString) => {
+  const formatDate = (dateString) => {
     if (!dateString) return '';
     if (dateString.includes('T')) {
       const datePart = dateString.split('T')[0];
@@ -15,7 +13,8 @@ function Home({ BASE_API }) {
     }
     return dateString;
   };
-
+  
+  const fetchLatestEvent = async () => {
       setLoading(true); // 開始撈資料，顯示 loading
       try {
         const data = await fetchWithRetry(`${BASE_API}/EVENT`, 3);
