@@ -43,7 +43,7 @@ function App() {
       <CartDrawer BASE_API={BASE_API} />
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home BASE_API={BASE_API} />} />
         <Route path="/classic" element={<Classic BASE_API={BASE_API} />} />
         <Route path="/special" element={<Special BASE_API={BASE_API} />} />
         <Route path="/spirits" element={<BaseMenu BASE_API={BASE_API} />} />

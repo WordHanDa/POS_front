@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
-function Home() {
+function Home({ BASE_API }) {
 
   const [latestEvent, setLatestEvent] = useState(null);
 
