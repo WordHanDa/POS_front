@@ -23,6 +23,18 @@ function Home({ BASE_API }) {
   const [latestEvent, setLatestEvent] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const formatDate = (dateString) => {
+  // 檢查資料是否存在
+  if (!dateString) return '日期未設定';
+  
+  // 直接切割字串：'2026-05-06T00:00:00.000Z' -> '2026-05-06'
+  const datePart = dateString.split('T')[0];
+  
+  // 重新組合成 YYYY/MM/DD
+  const [year, month, day] = datePart.split('-');
+  return `${year}/${month}/${day}`;
+};
+
   useEffect(() => {
     const handleResize = () => {
       const vh = window.innerHeight * 0.01;
