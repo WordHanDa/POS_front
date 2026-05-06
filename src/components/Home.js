@@ -25,7 +25,7 @@ function Home({ BASE_API }) {
           entry.target.classList.add('visible'); // 加入 visible 啟動動畫
         }
       });
-    }, observerOptions,[BASE_API]);
+    }, observerOptions);
 
     const storyElements = document.querySelectorAll('.story');
     storyElements.forEach(el => observer.observe(el));
@@ -61,7 +61,7 @@ function Home({ BASE_API }) {
       window.removeEventListener('resize', handleResize);
       observer.disconnect();
     };
-  }, []);
+  }, [BASE_API ]);
 
   return (
     <div className="home-page">
