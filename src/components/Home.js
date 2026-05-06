@@ -4,6 +4,20 @@ import './Home.css';
 
 function Home({ BASE_API }) {
 
+  const fetchLatestEvent = async () => {
+      setLoading(true); // 開始撈資料，顯示 loading
+      try {
+        const data = await fetchWithRetry(`${BASE_API}/EVENT`, 3);
+        if (data && data.length > 0) {
+          setLatestEvent(data[data.length - 1]);
+        }
+      } catch (err) {
+        console.error("三次重試後仍失敗:", err);
+      } finally {
+        setLoading(false); // 無論成功失敗，結束 loading
+      }
+    };
+
   const [latestEvent, setLatestEvent] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -60,20 +74,6 @@ const fetchWithRetry = async (url, retries = 3) => {
           // 可以在重試前加入短暫延遲，避免瞬間請求過多
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
-      }
-    };
-
-    const fetchLatestEvent = async () => {
-      setLoading(true); // 開始撈資料，顯示 loading
-      try {
-        const data = await fetchWithRetry(`${BASE_API}/EVENT`, 3);
-        if (data && data.length > 0) {
-          setLatestEvent(data[data.length - 1]);
-        }
-      } catch (err) {
-        console.error("三次重試後仍失敗:", err);
-      } finally {
-        setLoading(false); // 無論成功失敗，結束 loading
       }
     };
 
