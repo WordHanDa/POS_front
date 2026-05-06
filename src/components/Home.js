@@ -5,6 +5,7 @@ import './Home.css';
 function Home({ BASE_API }) {
 
   const [latestEvent, setLatestEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,23 +38,14 @@ function Home({ BASE_API }) {
     if (conditionElement) observer.observe(conditionElement);
 
     const formatDate = (dateString) => {
-  if (!dateString) return '';
-  
-  // 處理 ISO 格式 (2026-05-06T00:00:00.000Z)
-  if (dateString.includes('T')) {
-    const datePart = dateString.split('T')[0];
-    const [year, month, day] = datePart.split('-');
-    return `${year}/${month}/${day}`;
-  }
-  
-  // 處理純日期格式 (2026-05-06)
-  if (dateString.includes('-')) {
-    const [year, month, day] = dateString.split('-');
-    return `${year}/${month}/${day}`;
-  }
-  
-  return dateString; // 如果都沒匹配到，直接回傳原字串
-};
+    if (!dateString) return '';
+    if (dateString.includes('T')) {
+      const datePart = dateString.split('T')[0];
+      const [year, month, day] = datePart.split('-');
+      return `${year}/${month}/${day}`;
+    }
+    return dateString;
+  };
 const fetchWithRetry = async (url, retries = 3) => {
       for (let i = 0; i < retries; i++) {
         try {
