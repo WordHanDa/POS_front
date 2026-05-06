@@ -18,6 +18,11 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
       .replace(/<br\s*\/?>/gi, '\n');    // 處理標準 HTML 換行標籤
   };
 
+  const isItemActive = (item) => {
+    if (!item) return false;
+    return item.is_active === 1 || item.is_active === true || item.is_active === '1' || item.is_active === 'true';
+  };
+
   useEffect(() => {
     let timeoutId;
 
@@ -78,14 +83,20 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
     setError(false);
 
     try {
+      const apiUrl = `${BASE_API}/ITEM?type=${encodeURIComponent(type)}&is_active=1`;
       const data = await fetchWithRetry(
-        `${BASE_API}/ITEM_BY_TYPE?type=${type}&is_active=1`,
+        apiUrl,
         abortControllerRef.current.signal,
         2
       );
 
       if (Array.isArray(data)) {
-        setItems(data);
+        const typeFilter = String(type).toUpperCase();
+        const activeItems = data.filter(item =>
+          isItemActive(item) && String(item.Type || '').toUpperCase() === typeFilter
+        );
+
+        setItems(activeItems);
         setIsFadingOut(true);
         setTimeout(() => {
           setHasLoaded(true);

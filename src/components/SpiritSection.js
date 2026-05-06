@@ -8,6 +8,11 @@ const SpiritSection = ({ type, title, BASE_API }) => {
     const [hasLoaded, setHasLoaded] = useState(false);   // 控制內容淡入
     const [error, setError] = useState(false);
 
+    const isItemActive = (item) => {
+        if (!item) return false;
+        return item.is_active === 1 || item.is_active === true || item.is_active === '1' || item.is_active === 'true';
+    };
+
     const fetchWithRetry = useCallback(async (url, retries = 2, delay = 1000) => {
         try {
             const res = await fetch(url);
@@ -39,11 +44,19 @@ const SpiritSection = ({ type, title, BASE_API }) => {
 
         try {
             const apiType = type.toUpperCase();
-            const apiUrl = `${BASE_API}/ITEM_GROUPED?type=${apiType}&is_active=1`;
+            const apiUrl = `${BASE_API}/ITEM_GROUPED?type=${apiType}`;
             const data = await fetchWithRetry(apiUrl);
 
             if (Array.isArray(data)) {
-                setItems(data);
+                const filteredGroups = data.map(group => ({
+                    ...group,
+                    variants: Array.isArray(group.variants)
+                        ? group.variants.filter(isItemActive)
+                        : []
+                }))
+                .filter(group => group.variants.length > 0 && (group.is_active === undefined || isItemActive(group)));
+
+                setItems(filteredGroups);
 
                 // 觸發淡出 Loading
                 setIsFadingOut(true);
