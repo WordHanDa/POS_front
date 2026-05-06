@@ -161,7 +161,9 @@ function Home({ BASE_API }) {
             <tr>
               <th>活動期間：</th>
               <td className='event-text'>
-                {new Date(latestEvent.EVENT_START).toLocaleDateString()} ~ {new Date(latestEvent.EVENT_END).toLocaleDateString()}
+                {formatDate(latestEvent.EVENT_START_DATE || latestEvent.EVENT_START)} 
+                {' - '}
+                {formatDate(latestEvent.EVENT_END_DATE || latestEvent.EVENT_END)}
               </td>
             </tr>
             <tr>
