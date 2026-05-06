@@ -167,7 +167,7 @@ function Home({ BASE_API }) {
       <p className='event-text'>活動載入中...</p>
     ) : latestEvent ? (
       <>
-        <p className='event-text'>【{latestEvent.EVENT_CONTANT}】</p>
+        <p className='event-text'>【活動說明】</p>
         <table>
           <tbody>
             <tr>
@@ -177,6 +177,10 @@ function Home({ BASE_API }) {
                 {' - '}
                 {formatDate(latestEvent.EVENT_END_DATE || latestEvent.EVENT_END)}
               </td>
+            </tr>
+            <tr>
+              <th>活動內容：</th>
+              <td className='event-text'>{latestEvent.EVENT_CONTANT}</td>
             </tr>
             <tr>
               <th>注意事項：</th>
