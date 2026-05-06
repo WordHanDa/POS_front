@@ -5,6 +5,17 @@ import './Home.css';
 function Home({ BASE_API }) {
 
   const fetchLatestEvent = async () => {
+
+    const formatDate = (dateString) => {
+    if (!dateString) return '';
+    if (dateString.includes('T')) {
+      const datePart = dateString.split('T')[0];
+      const [year, month, day] = datePart.split('-');
+      return `${year}/${month}/${day}`;
+    }
+    return dateString;
+  };
+
       setLoading(true); // 開始撈資料，顯示 loading
       try {
         const data = await fetchWithRetry(`${BASE_API}/EVENT`, 3);
@@ -66,16 +77,6 @@ function Home({ BASE_API }) {
 
     const conditionElement = document.querySelector('.condition');
     if (conditionElement) observer.observe(conditionElement);
-
-    const formatDate = (dateString) => {
-    if (!dateString) return '';
-    if (dateString.includes('T')) {
-      const datePart = dateString.split('T')[0];
-      const [year, month, day] = datePart.split('-');
-      return `${year}/${month}/${day}`;
-    }
-    return dateString;
-  };
 
     fetchLatestEvent();
   }, [BASE_API]);
