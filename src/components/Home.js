@@ -17,6 +17,22 @@ function Home({ BASE_API }) {
         setLoading(false); // 無論成功失敗，結束 loading
       }
     };
+    const fetchWithRetry = async (url, retries = 3) => {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const response = await fetch(url);
+          if (!response.ok) throw new Error(`HTTP 錯誤: ${response.status}`);
+          
+          const text = await response.text();
+          return JSON.parse(text); // 成功解析 JSON 即回傳
+        } catch (err) {
+          console.warn(`第 ${i + 1} 次嘗試失敗:`, err);
+          if (i === retries - 1) throw err; // 最後一次嘗試仍失敗則拋出錯誤
+          // 可以在重試前加入短暫延遲，避免瞬間請求過多
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+    };
 
   const [latestEvent, setLatestEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -60,22 +76,6 @@ function Home({ BASE_API }) {
     }
     return dateString;
   };
-const fetchWithRetry = async (url, retries = 3) => {
-      for (let i = 0; i < retries; i++) {
-        try {
-          const response = await fetch(url);
-          if (!response.ok) throw new Error(`HTTP 錯誤: ${response.status}`);
-          
-          const text = await response.text();
-          return JSON.parse(text); // 成功解析 JSON 即回傳
-        } catch (err) {
-          console.warn(`第 ${i + 1} 次嘗試失敗:`, err);
-          if (i === retries - 1) throw err; // 最後一次嘗試仍失敗則拋出錯誤
-          // 可以在重試前加入短暫延遲，避免瞬間請求過多
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-      }
-    };
 
     fetchLatestEvent();
   }, [BASE_API]);
