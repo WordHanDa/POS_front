@@ -171,7 +171,7 @@ const fetchWithRetry = async (url, retries = 3) => {
             <tr>
               <th>活動期間：</th>
               <td className='event-text'>
-                {formatDate(latestEvent.EVENT_START_DATE)} - {formatDate(latestEvent.EVENT_END_DATE)}
+                {formatDate(latestEvent.EVENT_START)} - {formatDate(latestEvent.EVENT_END)}
               </td>
             </tr>
             <tr>
