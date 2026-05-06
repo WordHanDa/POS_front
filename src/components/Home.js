@@ -33,6 +33,22 @@ function Home() {
     const conditionElement = document.querySelector('.condition');
     if (conditionElement) observer.observe(conditionElement);
 
+    const fetchLatestEvent = async () => {
+      try {
+        // 假設後端有一個 API 可以取得所有事件，我們再從中取出最後一筆
+        const response = await fetch(`${process.env.REACT_APP_API_BASE}/EVENT`); 
+        const data = await response.json();
+        if (data && data.length > 0) {
+          // 假設陣列最後一筆為最新 (或依據 EVENT_ID 排序)
+          setLatestEvent(data[data.length - 1]);
+        }
+      } catch (err) {
+        console.error("無法取得最新活動:", err);
+      }
+    };
+
+    fetchLatestEvent();
+
     return () => {
       window.removeEventListener('resize', handleResize);
       observer.disconnect();
@@ -115,31 +131,33 @@ function Home() {
 
           <div className="small-container">
             <div className="Event">
-              <div className="event-title-container">
-                <h3 className="event-subtitle">Special Offer</h3>
-                <h3>今日特別優惠</h3>
-              </div>
-              <div className="Event-container">
-                <p className='event-text'>【活動說明】</p>
+          <div className="event-title-container">
+            <h3 className="event-subtitle">Special Offer</h3>
+            <h3>今日特別優惠</h3>
+          </div>
+          <div className="Event-container">
+            {latestEvent ? (
+              <>
+                <p className='event-text'>【{latestEvent.EVENT_CONTANT}】</p>
                 <table>
                   <tbody>
                     <tr>
                       <th>活動期間：</th>
-                      <td className='event-text'>2024/10/14 - 2024/10/20</td>
-                    </tr>
-                    <tr>
-                      <th>活動內容：</th>
-                      <td className='event-text'>哈哈皮炎</td>
+                      <td className='event-text'>{latestEvent.EVENT_START_DATE} - {latestEvent.EVENT_END_DATE}</td>
                     </tr>
                     <tr>
                       <th>注意事項：</th>
-                      <td className='event-text'>每人每日限參加一次。</td>
+                      <td className='event-text'>{latestEvent.EVENT_NOTE}</td>
                     </tr>
                   </tbody>
                 </table>
-                <p className='hint' >※ 本社團保留所有解釋權。</p>
-              </div>
-            </div>
+              </>
+            ) : (
+              <p className='event-text'>目前暫無特別優惠活動。</p>
+            )}
+            <p className='hint'>※ 本社團保留所有解釋權。</p>
+          </div>
+        </div>
 
             <div className='condition'>
               <div className='condition-container'>
