@@ -43,33 +43,39 @@ function Home({ BASE_API }) {
   const [year, month, day] = datePart.split('-');
   return `${year}/${month}/${day}`;
 };
+const fetchWithRetry = async (url, retries = 3) => {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const response = await fetch(url);
+          if (!response.ok) throw new Error(`HTTP 錯誤: ${response.status}`);
+          
+          const text = await response.text();
+          return JSON.parse(text); // 成功解析 JSON 即回傳
+        } catch (err) {
+          console.warn(`第 ${i + 1} 次嘗試失敗:`, err);
+          if (i === retries - 1) throw err; // 最後一次嘗試仍失敗則拋出錯誤
+          // 可以在重試前加入短暫延遲，避免瞬間請求過多
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+    };
 
     const fetchLatestEvent = async () => {
-  try {
-    // 使用傳入的 BASE_API，確保路徑正確
-    const url = `${BASE_API}/EVENT`;
-    const response = await fetch(url);
-    
-    if (!response.ok) throw new Error("網路請求失敗");
-
-    const data = await response.json();
-    if (data && data.length > 0) {
-      // 確保陣列有資料才取用
-      setLatestEvent(data[data.length - 1]);
-    }
-  } catch (err) {
-    console.error("無法取得最新活動:", err);
-  }
-};
+      setLoading(true); // 開始撈資料，顯示 loading
+      try {
+        const data = await fetchWithRetry(`${BASE_API}/EVENT`, 3);
+        if (data && data.length > 0) {
+          setLatestEvent(data[data.length - 1]);
+        }
+      } catch (err) {
+        console.error("三次重試後仍失敗:", err);
+      } finally {
+        setLoading(false); // 無論成功失敗，結束 loading
+      }
+    };
 
     fetchLatestEvent();
-    console.log("正在請求的完整路徑:", `${BASE_API}/EVENT`);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      observer.disconnect();
-    };
-  }, [BASE_API ]);
+  }, [BASE_API]);
 
   return (
     <div className="home-page">
@@ -152,29 +158,29 @@ function Home({ BASE_API }) {
             <h3>今日特別優惠</h3>
           </div>
           <div className="Event-container">
-            {latestEvent ? (
-              <>
-                <p className='event-text'>【活動說明】</p>
-                <table>
-                  <tbody>
-                    <tr>
-                      <th>活動期間：</th>
-                      <td className='event-text'>{formatDate(latestEvent.EVENT_START_DATE)} - {formatDate(latestEvent.EVENT_END_DATE)}</td>
-                    </tr>
-                    <tr>
-                      <th>注意事項：</th>
-                      <td className='event-text'>{latestEvent.EVENT_NOTE}</td>
-                    </tr>
-                    <tr>
-                      <th>注意事項：</th>
-                      <td className='event-text'>{latestEvent.EVENT_NOTE}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </>
-            ) : (
-              <p className='event-text'>目前暫無特別優惠活動。</p>
-            )}
+            {loading ? (
+      <p className='event-text'>活動載入中...</p>
+    ) : latestEvent ? (
+      <>
+        <p className='event-text'>【{latestEvent.EVENT_CONTANT}】</p>
+        <table>
+          <tbody>
+            <tr>
+              <th>活動期間：</th>
+              <td className='event-text'>
+                {formatDate(latestEvent.EVENT_START_DATE)} - {formatDate(latestEvent.EVENT_END_DATE)}
+              </td>
+            </tr>
+            <tr>
+              <th>注意事項：</th>
+              <td className='event-text'>{latestEvent.EVENT_NOTE}</td>
+            </tr>
+          </tbody>
+        </table>
+      </>
+    ) : (
+      <p className='event-text'>目前暫無特別優惠活動。</p>
+    )}
             <p className='hint'>※ 本社團保留所有解釋權。</p>
           </div>
         </div>
