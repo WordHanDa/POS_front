@@ -68,7 +68,7 @@ function Home({ BASE_API }) {
     const fetchLatestEvent = async () => {
       setLoading(true); // 開始撈資料，顯示 loading
       try {
-        const data = await fetchWithRetry(`${BASE_API}/test`, 3);
+        const data = await fetchWithRetry(`${BASE_API}/EVENT`, 3);
         if (data && data.length > 0) {
           setLatestEvent(data[data.length - 1]);
         }
