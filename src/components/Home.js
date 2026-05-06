@@ -36,6 +36,14 @@ function Home({ BASE_API }) {
     const conditionElement = document.querySelector('.condition');
     if (conditionElement) observer.observe(conditionElement);
 
+    const formatDate = (dateString) => {
+  if (!dateString) return '';
+  // 如果是 ISO 格式，先擷取日期部分 (YYYY-MM-DD)
+  const datePart = dateString.split('T')[0]; 
+  const [year, month, day] = datePart.split('-');
+  return `${year}/${month}/${day}`;
+};
+
     const fetchLatestEvent = async () => {
   try {
     // 使用傳入的 BASE_API，確保路徑正確
@@ -146,12 +154,16 @@ function Home({ BASE_API }) {
           <div className="Event-container">
             {latestEvent ? (
               <>
-                <p className='event-text'>【{latestEvent.EVENT_CONTANT}】</p>
+                <p className='event-text'>【活動說明】</p>
                 <table>
                   <tbody>
                     <tr>
                       <th>活動期間：</th>
-                      <td className='event-text'>{latestEvent.EVENT_START_DATE} - {latestEvent.EVENT_END_DATE}</td>
+                      <td className='event-text'>{formatDate(latestEvent.EVENT_START_DATE)} - {formatDate(latestEvent.EVENT_END_DATE)}</td>
+                    </tr>
+                    <tr>
+                      <th>注意事項：</th>
+                      <td className='event-text'>{latestEvent.EVENT_NOTE}</td>
                     </tr>
                     <tr>
                       <th>注意事項：</th>
