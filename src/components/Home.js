@@ -63,6 +63,7 @@ function Home({ BASE_API }) {
     };
 
     fetchLatestEvent();
+    console.log("正在請求的完整路徑:", `${API_BASE}/EVENT`);
 
     return () => {
       window.removeEventListener('resize', handleResize);
