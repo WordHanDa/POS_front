@@ -39,7 +39,7 @@ function Home({ BASE_API }) {
     const fetchLatestEvent = async () => {
       try {
         // 先確保 API_BASE 有值
-        const url = `${process.env.REACT_APP_API_BASE}/EVENT`;
+        const url = `${BASE_API}/EVENT`;
         const response = await fetch(url);
         
         // 1. 檢查原始回傳內容
@@ -63,7 +63,7 @@ function Home({ BASE_API }) {
     };
 
     fetchLatestEvent();
-    console.log("正在請求的完整路徑:", `${API_BASE}/EVENT`);
+    console.log("正在請求的完整路徑:", `${BASE_API}/EVENT`);
 
     return () => {
       window.removeEventListener('resize', handleResize);
