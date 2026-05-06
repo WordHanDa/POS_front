@@ -13,20 +13,6 @@ function Home({ BASE_API }) {
     }
     return dateString;
   };
-  
-  const fetchLatestEvent = async () => {
-      setLoading(true); // 開始撈資料，顯示 loading
-      try {
-        const data = await fetchWithRetry(`${BASE_API}/EVENT`, 3);
-        if (data && data.length > 0) {
-          setLatestEvent(data[data.length - 1]);
-        }
-      } catch (err) {
-        console.error("三次重試後仍失敗:", err);
-      } finally {
-        setLoading(false); // 無論成功失敗，結束 loading
-      }
-    };
     const fetchWithRetry = async (url, retries = 3) => {
       for (let i = 0; i < retries; i++) {
         try {
@@ -76,6 +62,20 @@ function Home({ BASE_API }) {
 
     const conditionElement = document.querySelector('.condition');
     if (conditionElement) observer.observe(conditionElement);
+    
+    const fetchLatestEvent = async () => {
+      setLoading(true); // 開始撈資料，顯示 loading
+      try {
+        const data = await fetchWithRetry(`${BASE_API}/EVENT`, 3);
+        if (data && data.length > 0) {
+          setLatestEvent(data[data.length - 1]);
+        }
+      } catch (err) {
+        console.error("三次重試後仍失敗:", err);
+      } finally {
+        setLoading(false); // 無論成功失敗，結束 loading
+      }
+    };
 
     fetchLatestEvent();
   }, [BASE_API]);
