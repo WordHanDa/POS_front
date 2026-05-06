@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import './Home.css';
 
 function Home() {
+
+  const [latestEvent, setLatestEvent] = useState(null);
+
   useEffect(() => {
     const handleResize = () => {
       const vh = window.innerHeight * 0.01;
