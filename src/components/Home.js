@@ -25,7 +25,7 @@ function Home({ BASE_API }) {
           entry.target.classList.add('visible'); // 加入 visible 啟動動畫
         }
       });
-    }, observerOptions);
+    }, observerOptions,[BASE_API]);
 
     const storyElements = document.querySelectorAll('.story');
     storyElements.forEach(el => observer.observe(el));
