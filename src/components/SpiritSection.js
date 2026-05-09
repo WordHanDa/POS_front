@@ -15,6 +15,37 @@ const SpiritSection = ({ type, title, BASE_API }) => {
         return item.is_active === 1 || item.is_active === true || item.is_active === '1' || item.is_active === 'true';
     };
 
+    const formatImageUrl = (url) => {
+        if (!url) return "https://posfront-psi.vercel.app/placeholder.png";
+
+        // 1. 處理 Google Drive 分享連結
+        if (url.includes("drive.google.com")) {
+            let fileId = "";
+            try {
+                if (url.includes("/d/")) {
+                    fileId = url.split('/d/')[1]?.split('/')[0];
+                } else if (url.includes("id=")) {
+                    fileId = url.split('id=')[1]?.split('&')[0];
+                }
+
+                // 使用 Google 圖片快取伺服器，這對 React 顯示最穩定
+                return `https://lh3.googleusercontent.com/u/0/d/${fileId}`;
+            } catch (e) {
+                return "https://posfront-psi.vercel.app/placeholder.png";
+            }
+        }
+
+        // 2. 處理 img/ 開頭的本地路徑
+        if (url.startsWith("img/")) {
+            // 確保 base url 後面只有一個斜線
+            const baseUrl = "https://posfront-psi.vercel.app/";
+            return baseUrl + url;
+        }
+
+        // 3. 其他完整 URL (http:// 或 https://) 直接回傳
+        return url;
+    };
+
     const fetchWithRetry = useCallback(async (url, retries = 2, delay = 1000) => {
         try {
             const res = await fetch(url);
@@ -56,7 +87,7 @@ const SpiritSection = ({ type, title, BASE_API }) => {
                         ? group.variants.filter(isItemActive)
                         : []
                 }))
-                .filter(group => group.variants.length > 0 && (group.is_active === undefined || isItemActive(group)));
+                    .filter(group => group.variants.length > 0 && (group.is_active === undefined || isItemActive(group)));
 
                 setItems(filteredGroups);
 
@@ -142,7 +173,7 @@ const SpiritSection = ({ type, title, BASE_API }) => {
                                     </div>
                                     <div className="divider">
                                         <img
-                                            src={group.picture_url}
+                                            src={formatImageUrl(group.picture_url)}
                                             className="item-image"
                                             alt={group.display_name}
                                             loading="lazy"
