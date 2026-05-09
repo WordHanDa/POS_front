@@ -142,7 +142,7 @@ const SpiritSection = ({ type, title, BASE_API }) => {
                                     </div>
                                     <div className="divider">
                                         <img
-                                            src={group.picture_url?.startsWith('/') ? group.picture_url : `/${group.picture_url}`}
+                                            src={group.picture_url}
                                             className="item-image"
                                             alt={group.display_name}
                                             loading="lazy"
