@@ -219,7 +219,7 @@ const CartDrawer = ({ BASE_API }) => {
                                         <div className="item-note-row">
                                             <input
                                                 type="text"
-                                                placeholder="備註 (如：少冰、少糖...)"
+                                                placeholder="備註欄(請將您的需求告訴我們)"
                                                 value={item.note || ''}
                                                 onChange={(e) => updateNote(item.ITEM_ID, e.target.value)}
                                             />
