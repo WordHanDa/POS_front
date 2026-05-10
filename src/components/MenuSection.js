@@ -1,6 +1,35 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Cookies from 'js-cookie';
 
+const formatDescription = (text) => {
+  if (!text) return "";
+  return text
+    .replace(/\{&lt;br\/&gt;\}/g, '\n')
+    .replace(/\{br\}/g, '\n')
+    .replace(/<br\s*\/?>/gi, '\n');
+};
+
+const fetchWithRetry = async (url, signal, retries = 2, delay = 1000) => {
+  try {
+    const res = await fetch(url, { signal });
+    if (!res.ok) {
+      if (res.status >= 500 && retries > 0) {
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return fetchWithRetry(url, signal, retries - 1, delay * 2);
+      }
+      throw new Error(`HTTP ${res.status}`);
+    }
+    return await res.json();
+  } catch (err) {
+    if (err.name === 'AbortError') throw err;
+    if (retries > 0) {
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return fetchWithRetry(url, signal, retries - 1, delay * 2);
+    }
+    throw err;
+  }
+};
+
 const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
   // --- 狀態管理擴充 ---
   const [items, setItems] = useState([]);
@@ -8,7 +37,7 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
-  
+
   // 游標分頁專用狀態
   const [nextCursor, setNextCursor] = useState(null);
   const [hasMore, setHasMore] = useState(true);
@@ -18,34 +47,9 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
   const bottomSentinelRef = useRef(null); // 新增：用於觀察列表底部以觸發下一頁
   const abortControllerRef = useRef(null);
 
-  const formatDescription = (text) => {
-    if (!text) return "";
-    return text
-      .replace(/\{&lt;br\/&gt;\}/g, '\n')
-      .replace(/\{br\}/g, '\n')
-      .replace(/<br\s*\/?>/gi, '\n');
-  };
 
-  const fetchWithRetry = async (url, signal, retries = 2, delay = 1000) => {
-    try {
-      const res = await fetch(url, { signal });
-      if (!res.ok) {
-        if (res.status >= 500 && retries > 0) {
-          await new Promise(resolve => setTimeout(resolve, delay));
-          return fetchWithRetry(url, signal, retries - 1, delay * 2);
-        }
-        throw new Error(`HTTP ${res.status}`);
-      }
-      return await res.json();
-    } catch (err) {
-      if (err.name === 'AbortError') throw err;
-      if (retries > 0) {
-        await new Promise(resolve => setTimeout(resolve, delay));
-        return fetchWithRetry(url, signal, retries - 1, delay * 2);
-      }
-      throw err;
-    }
-  };
+
+
 
   // --- 核心拉取資料邏輯 (加入游標參數) ---
   const fetchData = useCallback(async (cursorToFetch = null) => {
@@ -59,7 +63,7 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
       // 改為呼叫新的 ITEM_BY_TYPE API，並帶上游標與限制筆數
       const cursorParam = cursorToFetch ? `&cursor=${cursorToFetch}` : '';
       const apiUrl = `${BASE_API}/ITEM_BY_TYPE?type=${encodeURIComponent(type)}&limit=20${cursorParam}`;
-      
+
       const response = await fetchWithRetry(
         apiUrl,
         abortControllerRef.current.signal,
@@ -123,7 +127,7 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
   // --- 觀察器 2：負責無限下拉 (監聽底部元素) ---
   useEffect(() => {
     // 如果還沒首次載入完成，不需要監聽底部
-    if (!hasLoaded) return; 
+    if (!hasLoaded) return;
 
     const bottomObserver = new IntersectionObserver(
       ([entry]) => {
@@ -211,11 +215,11 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
               </div>
             ))}
           </div>
-          
+
           {/* 無限下拉的觀察目標 (Sentinel) */}
           {hasLoaded && (
-            <div 
-              ref={bottomSentinelRef} 
+            <div
+              ref={bottomSentinelRef}
               style={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}
             >
               {loading && hasMore && <div className="loader-circle-small"></div>}
