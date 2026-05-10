@@ -223,7 +223,6 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
               style={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}
             >
               {loading && hasMore && <div className="loader-circle-small"></div>}
-              {!hasMore && items.length > 0 && <span style={{ color: '#b2966b', fontSize: '0.9rem' }}>已經到底囉</span>}
             </div>
           )}
         </>
