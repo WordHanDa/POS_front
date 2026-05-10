@@ -1,58 +1,30 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Cookies from 'js-cookie';
 
 const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
+  // --- 狀態管理擴充 ---
   const [items, setItems] = useState([]);
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false); // 是否已完成首次載入
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [isFadingOut, setIsFadingOut] = useState(false); // 控制淡出動畫 class
-  const sectionRef = useRef(null);
+  const [isFadingOut, setIsFadingOut] = useState(false);
+  
+  // 游標分頁專用狀態
+  const [nextCursor, setNextCursor] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+
+  // --- Refs ---
+  const sectionRef = useRef(null); // 用於觀察整個區塊是否進入畫面
+  const bottomSentinelRef = useRef(null); // 新增：用於觀察列表底部以觸發下一頁
   const abortControllerRef = useRef(null);
 
   const formatDescription = (text) => {
     if (!text) return "";
     return text
-      .replace(/\{&lt;br\/&gt;\}/g, '\n') // 處理您之前提到的奇怪格式
-      .replace(/\{br\}/g, '\n')          // 處理常見的自定義換行符
-      .replace(/<br\s*\/?>/gi, '\n');    // 處理標準 HTML 換行標籤
+      .replace(/\{&lt;br\/&gt;\}/g, '\n')
+      .replace(/\{br\}/g, '\n')
+      .replace(/<br\s*\/?>/gi, '\n');
   };
-
-  const isItemActive = (item) => {
-    if (!item) return false;
-    return item.is_active === 1 || item.is_active === true || item.is_active === '1' || item.is_active === 'true';
-  };
-
-  useEffect(() => {
-    let timeoutId;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // 當元素進入視窗且尚未載入時
-        if (entry.isIntersecting && !hasLoaded && !loading) {
-          // 增加錯開時間，根據 index 排序 (0ms, 200ms, 400ms...)
-          const staggerDelay = index * 200;
-
-          timeoutId = setTimeout(() => {
-            fetchData();
-          }, staggerDelay);
-        }
-      },
-      {
-        threshold: 0.05,
-        rootMargin: '0px 0px 100px 0px' // 提前一點點觸發
-      }
-    );
-
-    if (sectionRef.current) observer.observe(sectionRef.current);
-
-    return () => {
-      observer.disconnect();
-      if (timeoutId) clearTimeout(timeoutId);
-      if (abortControllerRef.current) abortControllerRef.current.abort();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasLoaded, type, index]);
 
   const fetchWithRetry = async (url, signal, retries = 2, delay = 1000) => {
     try {
@@ -75,29 +47,40 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
     }
   };
 
-  const fetchData = async () => {
-    if (hasLoaded || loading) return;
+  // --- 核心拉取資料邏輯 (加入游標參數) ---
+  const fetchData = useCallback(async (cursorToFetch = null) => {
+    if (loading || !hasMore) return;
 
     abortControllerRef.current = new AbortController();
     setLoading(true);
     setError(false);
 
     try {
-      const apiUrl = `${BASE_API}/ITEM?type=${encodeURIComponent(type)}&is_active=1`;
-      const data = await fetchWithRetry(
+      // 改為呼叫新的 ITEM_BY_TYPE API，並帶上游標與限制筆數
+      const cursorParam = cursorToFetch ? `&cursor=${cursorToFetch}` : '';
+      const apiUrl = `${BASE_API}/ITEM_BY_TYPE?type=${encodeURIComponent(type)}&limit=20${cursorParam}`;
+      
+      const response = await fetchWithRetry(
         apiUrl,
         abortControllerRef.current.signal,
         2
       );
 
-      if (Array.isArray(data)) {
-        const typeFilter = String(type).toUpperCase();
-        const activeItems = data.filter(item =>
-          isItemActive(item) && String(item.Type || '').toUpperCase() === typeFilter
-        );
-
-        setItems(activeItems);
+      // 後端回傳格式現在預期是 { data: [...], nextCursor: ... }
+      if (response && Array.isArray(response.data)) {
         setIsFadingOut(true);
+
+        setItems(prev => {
+          // 過濾重複資料，避免 React 嚴格模式或快速滾動造成的 key 重複
+          const newItems = response.data.filter(
+            newItem => !prev.some(prevItem => prevItem.ITEM_ID === newItem.ITEM_ID)
+          );
+          return [...prev, ...newItems];
+        });
+
+        setNextCursor(response.nextCursor);
+        setHasMore(response.nextCursor !== null); // 如果 nextCursor 是 null，代表沒資料了
+
         setTimeout(() => {
           setHasLoaded(true);
           setLoading(false);
@@ -108,12 +91,61 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
       }
     } catch (err) {
       if (err.name === 'AbortError') return;
-      console.error("Final Request Failure:", err);
+      console.error("Fetch Failure:", err);
       setError(true);
-    } finally {
       setLoading(false);
     }
-  };
+  }, [BASE_API, type, loading, hasMore]);
+
+  // --- 觀察器 1：負責首次進入畫面的延遲載入 (維持你原本的優秀設計) ---
+  useEffect(() => {
+    let timeoutId;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasLoaded && !loading && items.length === 0) {
+          const staggerDelay = index * 200;
+          timeoutId = setTimeout(() => {
+            fetchData(null); // 首次載入游標為 null
+          }, staggerDelay);
+        }
+      },
+      { threshold: 0.05, rootMargin: '0px 0px 100px 0px' }
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+
+    return () => {
+      observer.disconnect();
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [hasLoaded, loading, index, items.length, fetchData]);
+
+  // --- 觀察器 2：負責無限下拉 (監聽底部元素) ---
+  useEffect(() => {
+    // 如果還沒首次載入完成，不需要監聽底部
+    if (!hasLoaded) return; 
+
+    const bottomObserver = new IntersectionObserver(
+      ([entry]) => {
+        // 當列表底部進入畫面，且還有更多資料、且沒有正在載入時觸發
+        if (entry.isIntersecting && hasMore && !loading) {
+          fetchData(nextCursor);
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px 200px 0px' } // 提早 200px 觸發下一頁，體驗更滑順
+    );
+
+    if (bottomSentinelRef.current) bottomObserver.observe(bottomSentinelRef.current);
+
+    return () => bottomObserver.disconnect();
+  }, [hasLoaded, hasMore, loading, nextCursor, fetchData]);
+
+  // 取消請求清理
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) abortControllerRef.current.abort();
+    };
+  }, []);
 
   const addToCart = (e, item) => {
     e.stopPropagation();
@@ -138,40 +170,40 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
   };
 
   return (
-    // 重點：minHeight 改為 400px，防止頁面初始長度太短
     <div className="menu-section-wrapper" ref={sectionRef} style={{ minHeight: '400px', marginBottom: '40px' }}>
       <div className="section-title text-gradient" style={{ fontSize: '1.8rem', marginBottom: '20px' }}>
         {title}
       </div>
 
-      {(loading || isFadingOut) && !hasLoaded && (
+      {(!hasLoaded && loading) && (
         <div className={`loading-placeholder ${isFadingOut ? 'fade-out' : ''}`}>
           <div className="loader-circle-small"></div>
           <p className="loading-text">Crafting {title}...</p>
         </div>
       )}
 
-      {error ? (
+      {error && items.length === 0 ? (
         <div className="error-container" style={errorContainerStyle}>
           <i className="fa-solid fa-circle-exclamation" style={errorIconStyle}></i>
           <p style={errorTitleStyle}>伺服器忙碌中</p>
-          <button onClick={() => fetchData()} className="retry-btn" style={retryButtonStyle}>
+          <button onClick={() => fetchData(null)} className="retry-btn" style={retryButtonStyle}>
             點擊重試
           </button>
         </div>
       ) : (
-        hasLoaded && (
+        <>
           <div className="menu-grid content-fade-in">
             {items.map((item) => (
               <div
                 className="menu-item"
                 key={item.ITEM_ID}
-                onClick={(e) => addToCart(e, item)} // 關鍵：一定要寫 (e) => ... 並把 e 傳進去
+                onClick={(e) => addToCart(e, item)}
               >
                 <div className="item-header">
                   <span className="item-name">{item.ITEM_NAME}</span>
                   <span className="item-price">${item.ITEM_PRICE}</span>
                 </div>
+                {/* 注意：這裡目前吃不到長篇 Description 了 */}
                 <div className="item-description" style={{ whiteSpace: 'pre-line' }}>
                   {formatDescription(item.Description)}
                 </div>
@@ -179,7 +211,18 @@ const MenuSection = ({ type, title, BASE_API, index = 0 }) => {
               </div>
             ))}
           </div>
-        )
+          
+          {/* 無限下拉的觀察目標 (Sentinel) */}
+          {hasLoaded && (
+            <div 
+              ref={bottomSentinelRef} 
+              style={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}
+            >
+              {loading && hasMore && <div className="loader-circle-small"></div>}
+              {!hasMore && items.length > 0 && <span style={{ color: '#b2966b', fontSize: '0.9rem' }}>已經到底囉</span>}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
