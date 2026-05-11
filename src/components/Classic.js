@@ -26,7 +26,6 @@ function Classic({ BASE_API }) {
     { type: 'SPARKLING', title: 'SPARKLING 氣泡' },
     { type: 'CLASSIC', title: 'CLASSIC 經典' },
     { type: 'SHOTS', title: 'SHOTS 一口酒' },
-    { type: 'GATHERING_DRINKS', title: 'GATHERING DRINKS 聚會酒' },
     { type: 'TASTING_MENU', title: 'TASTING MENU 品嘗菜單' }
   ];
 
