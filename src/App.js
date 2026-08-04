@@ -10,7 +10,7 @@ import Special from './components/Special';
 import SpiritDetail from './components/SpiritDetail';
 import CartDrawer from './components/CartDrawer';
 
-const BASE_API = 'https://posserver-sigma.vercel.app';
+const BASE_API = 'http://127.0.0.1:3002';
 
 function App() {
   useEffect(() => {
@@ -22,7 +22,7 @@ function App() {
       Cookies.set('customer_seat_id', seatIdFromUrl, { expires: 1, path: '/' });
 
       // 2. 向後端請求所有座位清單，比對出 SEAT_NAME
-      fetch('https://posserver-sigma.vercel.app/SEAT')
+      fetch(`${BASE_API}/SEAT`)
         .then(res => res.json())
         .then(data => {
           // 找尋 ID 匹配的座位項目
