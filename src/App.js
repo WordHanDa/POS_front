@@ -10,7 +10,7 @@ import Special from './components/Special';
 import SpiritDetail from './components/SpiritDetail';
 import CartDrawer from './components/CartDrawer';
 
-const BASE_API = 'https://posserver-sigma.vercel.app/api';
+const BASE_API = 'https://posserver-sigma.vercel.app';
 
 function App() {
   useEffect(() => {
